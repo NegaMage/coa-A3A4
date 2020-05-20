@@ -1,0 +1,414 @@
+$date
+	Sun May 17 20:33:04 2020
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module mips_testbench $end
+$scope module test $end
+$var wire 1 ! branch_signal $end
+$var wire 1 " clock $end
+$var wire 32 # write_data [31:0] $end
+$var wire 5 $ shamt [4:0] $end
+$var wire 32 % rt_content [31:0] $end
+$var wire 5 & rt [4:0] $end
+$var wire 32 ' rs_content [31:0] $end
+$var wire 5 ( rs [4:0] $end
+$var wire 5 ) rd [4:0] $end
+$var wire 6 * opcode [5:0] $end
+$var wire 32 + memory_read_data [31:0] $end
+$var wire 32 , instruction [31:0] $end
+$var wire 16 - immediate [15:0] $end
+$var wire 6 . funct [5:0] $end
+$var wire 26 / address [25:0] $end
+$var wire 1 0 RegWrite $end
+$var wire 1 1 RegRead $end
+$var wire 1 2 RegDst $end
+$var wire 1 3 MemWrite $end
+$var wire 1 4 MemRead $end
+$var reg 32 5 PC [31:0] $end
+$scope module alu_process $end
+$var wire 5 6 shamt [4:0] $end
+$var wire 32 7 rt_content [31:0] $end
+$var wire 32 8 rs_content [31:0] $end
+$var wire 6 9 opcode [5:0] $end
+$var wire 16 : immediate [15:0] $end
+$var wire 6 ; funct [5:0] $end
+$var reg 32 < ALU_result [31:0] $end
+$var reg 1 = sig_branch $end
+$var reg 32 > signExtend [31:0] $end
+$var reg 32 ? signed_rs [31:0] $end
+$var reg 32 @ signed_rt [31:0] $end
+$var reg 32 A temp [31:0] $end
+$var reg 32 B zeroExtend [31:0] $end
+$var integer 32 C i [31:0] $end
+$upscope $end
+$scope module contents $end
+$var wire 1 " clk $end
+$var wire 32 D write_data [31:0] $end
+$var wire 5 E rt [4:0] $end
+$var wire 5 F rs [4:0] $end
+$var wire 5 G rd [4:0] $end
+$var wire 6 H opcode [5:0] $end
+$var wire 1 0 RegWrite $end
+$var wire 1 1 RegRead $end
+$var wire 1 2 RegDst $end
+$var reg 32 I read_data_1 [31:0] $end
+$var reg 32 J read_data_2 [31:0] $end
+$upscope $end
+$scope module dataMemory $end
+$var wire 32 K address [31:0] $end
+$var wire 32 L write_data [31:0] $end
+$var wire 6 M opcode [5:0] $end
+$var wire 1 3 MemWrite $end
+$var wire 1 4 MemRead $end
+$var reg 32 N read_data [31:0] $end
+$upscope $end
+$scope module inst_mem $end
+$var wire 32 O program_counter [31:0] $end
+$var reg 32 P instruction [31:0] $end
+$upscope $end
+$scope module parse $end
+$var wire 32 Q instruction [31:0] $end
+$var wire 32 R p_count [31:0] $end
+$var wire 6 S opcode [5:0] $end
+$var reg 26 T address [25:0] $end
+$var reg 6 U funct [5:0] $end
+$var reg 16 V immediate [15:0] $end
+$var reg 5 W rd [4:0] $end
+$var reg 5 X rs [4:0] $end
+$var reg 5 Y rt [4:0] $end
+$var reg 5 Z shamt [4:0] $end
+$upscope $end
+$scope module signals $end
+$var wire 6 [ funct [5:0] $end
+$var wire 6 \ opcode [5:0] $end
+$var reg 1 ] Branch $end
+$var reg 1 4 MemRead $end
+$var reg 1 3 MemWrite $end
+$var reg 1 2 RegDst $end
+$var reg 1 1 RegRead $end
+$var reg 1 0 RegWrite $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module mips_testbench $end
+$var reg 1 " clock $end
+$scope module test $end
+$scope module alu_process $end
+$upscope $end
+$scope module contents $end
+$upscope $end
+$scope module dataMemory $end
+$upscope $end
+$scope module inst_mem $end
+$upscope $end
+$scope module parse $end
+$upscope $end
+$scope module signals $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0]
+b1000 \
+bx [
+bx Z
+b101 Y
+b100 X
+bx W
+b10001000 V
+bx U
+bx T
+b1000 S
+b0 R
+b100000100001010000000010001000 Q
+b100000100001010000000010001000 P
+b0 O
+bx N
+b1000 M
+bx L
+bx K
+bx J
+bx I
+b1000 H
+bx G
+b100 F
+b101 E
+bx D
+bx C
+b10001000 B
+bx A
+bx @
+bx ?
+b10001000 >
+x=
+bx <
+bx ;
+b10001000 :
+b1000 9
+bx 8
+bx 7
+bx 6
+b0 5
+04
+03
+02
+11
+10
+bx /
+bx .
+b10001000 -
+b100000100001010000000010001000 ,
+bx +
+b1000 *
+bx )
+b100 (
+bx '
+b101 &
+bx %
+bx $
+bx #
+0"
+x!
+$end
+#100
+12
+11
+10
+b100000 .
+b100000 ;
+b100000 U
+b100000 [
+b1 (
+b1 F
+b1 X
+b10 &
+b10 E
+b10 Y
+b11 )
+b11 G
+b11 W
+b0 $
+b0 6
+b0 Z
+b0 *
+b0 9
+b0 H
+b0 M
+b0 S
+b0 \
+b1000100001100000100000 ,
+b1000100001100000100000 P
+b1000100001100000100000 Q
+b1 5
+b1 O
+b1 R
+1"
+#200
+0"
+#300
+02
+11
+10
+b100 (
+b100 F
+b100 X
+b101 &
+b101 E
+b101 Y
+b1000 *
+b1000 9
+b1000 H
+b1000 M
+b1000 S
+b1000 \
+b100000100001010000000010001000 ,
+b100000100001010000000010001000 P
+b100000100001010000000010001000 Q
+b10 5
+b10 O
+b10 R
+1"
+#400
+0"
+#500
+12
+11
+10
+b1 (
+b1 F
+b1 X
+b10 &
+b10 E
+b10 Y
+b0 *
+b0 9
+b0 H
+b0 M
+b0 S
+b0 \
+b1000100001100000100000 ,
+b1000100001100000100000 P
+b1000100001100000100000 Q
+b11 5
+b11 O
+b11 R
+1"
+#600
+0"
+#700
+02
+11
+10
+b100 (
+b100 F
+b100 X
+b101 &
+b101 E
+b101 Y
+b1000 *
+b1000 9
+b1000 H
+b1000 M
+b1000 S
+b1000 \
+b100000100001010000000010001000 ,
+b100000100001010000000010001000 P
+b100000100001010000000010001000 Q
+b100 5
+b100 O
+b100 R
+1"
+#800
+0"
+#900
+12
+11
+10
+b1 (
+b1 F
+b1 X
+b10 &
+b10 E
+b10 Y
+b0 *
+b0 9
+b0 H
+b0 M
+b0 S
+b0 \
+b1000100001100000100000 ,
+b1000100001100000100000 P
+b1000100001100000100000 Q
+b101 5
+b101 O
+b101 R
+1"
+#1000
+0"
+#1100
+02
+11
+10
+b100 (
+b100 F
+b100 X
+b101 &
+b101 E
+b101 Y
+b1000 *
+b1000 9
+b1000 H
+b1000 M
+b1000 S
+b1000 \
+b100000100001010000000010001000 ,
+b100000100001010000000010001000 P
+b100000100001010000000010001000 Q
+b110 5
+b110 O
+b110 R
+1"
+#1200
+0"
+#1300
+12
+11
+10
+b1 (
+b1 F
+b1 X
+b10 &
+b10 E
+b10 Y
+b0 *
+b0 9
+b0 H
+b0 M
+b0 S
+b0 \
+b1000100001100000100000 ,
+b1000100001100000100000 P
+b1000100001100000100000 Q
+b111 5
+b111 O
+b111 R
+1"
+#1400
+0"
+#1500
+02
+11
+10
+b100 (
+b100 F
+b100 X
+b101 &
+b101 E
+b101 Y
+b1000 *
+b1000 9
+b1000 H
+b1000 M
+b1000 S
+b1000 \
+b100000100001010000000010001000 ,
+b100000100001010000000010001000 P
+b100000100001010000000010001000 Q
+b1000 5
+b1000 O
+b1000 R
+1"
+#1600
+0"
+#1700
+12
+11
+10
+b1 (
+b1 F
+b1 X
+b10 &
+b10 E
+b10 Y
+b0 *
+b0 9
+b0 H
+b0 M
+b0 S
+b0 \
+b1000100001100000100000 ,
+b1000100001100000100000 P
+b1000100001100000100000 Q
+b1001 5
+b1001 O
+b1001 R
+1"
+#1800
+0"
