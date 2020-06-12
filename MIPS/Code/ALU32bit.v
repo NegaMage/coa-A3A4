@@ -202,8 +202,7 @@ module alu32bittb();
              .funct(funct),
              .immediate(immediate));
 
-    initial 
-    begin
+    initial begin
         opcode = 6'h0;
         
         //Add 12 and -10

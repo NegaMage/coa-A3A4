@@ -1,5 +1,5 @@
-/* Module designed to act as the ALU - takes in the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals
-   with the signedImm as arguments
+`timescale 1ns/1ns
+/* Module designed to act as the ALU - takes in the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals with the signedImm as arguments
 */
 
 module ALU64bit(
@@ -25,7 +25,7 @@ module ALU64bit(
       zeroExtendSI = {{48{1'b0}},si[15:0]};
       signExtendSI = {{48{si[15]}},si[15:0]};
       zeroExtendDS = {{50{1'b0}},ds[13:0]};
-
+      Branch = 0;
       if(opcode == 6'd31 & xoxo != 9'd0)    //XO Format
       begin
           
@@ -133,5 +133,85 @@ module ALU64bit(
 	
 endmodule
 
+module alu64bittb();
 
+    wire [63:0] ALU_result;
+    wire branch;
+    reg [5:0] opcode;
+    reg [4:0] rs, rt, bo, bi;
+    reg [15:0] si;
+    reg [13:0] ds; 
+    reg [9:0] xox;
+    reg [8:0] xoxo;
+    reg aa;
+    reg [1:0] xods;
+
+    ALU64bit testerboi (
+        .ALU_result(ALU_result),
+        .Branch(branch),
+        .opcode(opcode),
+        .rs(rs),
+        .rt(rt),
+        .bo(bo),
+        .bi(bi),
+        .ds(ds),
+        .xox(xox),
+        .xoxo(xoxo),
+        .aa(aa),
+        .xods(xods)
+    );
+
+    initial begin
+        $dumpfile("ALU64Bittb.vcd"); 
+        $dumpvars(0, alu64bittb);
+    end
+
+    initial begin
+        
+        //Add 3 and 5
+        opcode = 6'd31;
+        xoxo = 9'd266;
+        rs = 3;
+        rt = 5;
+        #10
+
+        //Sub 14 from 32
+        opcode = 6'd40;
+        xoxo = 9'd266;
+        rt = 32;
+        rs = 14;
+        #10
+
+        //AND of 123 and 632
+        opcode = 6'd31;
+        xox = 9'd28;
+        rt = 123;
+        rs = 632;
+        #10
+
+        //XOR of 513 & 66
+        opcode = 6'd31;
+        xox = 10'd316;
+        rt = 513;
+        rs = 66;
+        #10
+    
+        //BNE
+        opcode = 6'd19;
+        aa = 0;
+        xox = 10'd316;
+        rt = 4;
+        rs = 3;
+        #10
+
+        //Store word address generation
+        si = 15'b1;
+        opcode = 6'd36;
+        rt = 8;
+        si = 1000;
+        #10;
+
+    end
+
+endmodule
 
