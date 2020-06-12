@@ -13,6 +13,7 @@ module read_data_memory(
     initial    //Read the current contents of the main memory
     begin
         $readmemb("data.mem", data_mem, 31 ,0); // adjust according to the number of entries in data.mem
+        read_data = 32'd0;
     end
 	
     always @(address) begin
@@ -36,4 +37,57 @@ module read_data_memory(
             read_data = data_mem[address];
         end
     end	
+
+    initial 
+    begin
+        $monitor("opcode : %6b, address : %32b, write data : %32b, read signal : %1b, write signal : %1b, Result : %32b\n",
+        opcode, address, write_data, MemRead, MemWrite, read_data);
+    end
+
+endmodule
+
+module read_data_memory_tb();
+    wire [31:0] read_data;
+    reg  [31:0] address, write_data;
+    reg [5:0] opcode;
+    reg MemRead,MemWrite;
+
+    read_data_memory datamem(
+        .read_data(read_data),
+        .address(address),
+        .write_data(write_data),
+        .opcode(opcode),
+        .MemRead(MemRead),
+        .MemWrite(MemWrite)
+    );
+
+    initial begin
+        MemWrite = 1'b1;
+        MemRead = 1'b0;
+
+        //write halfword
+        opcode = 6'h28;
+        write_data = 32'd253;
+        address = 32'd0;
+        #10;
+
+        //write word
+        opcode = 6'h29;
+        write_data = 32'd1011;
+        address = 32'd13;
+        #10;
+
+        // read word
+        MemWrite = 1'b0;
+        MemRead = 1'b1;
+        address = 32'd7;
+        #10;
+    end
+
+
+    initial begin
+        $dumpfile("read_data_memory.vcd"); 
+        $dumpvars(0, read_data_memory_tb);
+    end
+
 endmodule
