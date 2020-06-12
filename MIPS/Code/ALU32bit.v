@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 /* Module designed to act as the ALU - takes in the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals
    with the signedImm as arguments
 */
@@ -181,4 +182,94 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
         opcode, rs_content, rt_content, signExtend, ALU_result);
     end
 	
+endmodule
+
+module alu32bittb();
+    reg [5:0] funct, opcode;
+    reg [4:0] shamt; // shift amount
+    reg [15:0] immediate;
+    reg [31:0] rs_content, rt_content; //inputs
+    wire sig_branch;
+    wire [31:0] ALU_result; //Output of the ALU
+
+
+    ALU32bit testerboi(.ALU_result(ALU_result),
+             .sig_branch(sig_branch),
+             .opcode(opcode),
+             .rs_content(rs_content),
+             .rt_content(rt_content),
+             .shamt(shamt),
+             .funct(funct),
+             .immediate(immediate));
+
+    initial 
+    begin
+        opcode = 6'h0;
+        
+        //Add 12 and -10
+        rs_content = 12;
+        rt_content = -10;
+        funct = 6'h20;
+        shamt = 0;
+        immediate = 20;
+        #10;
+
+        //Subtract 3 from 1
+        rs_content = 1;
+        rt_content = 3;
+        funct = 6'h22;
+        shamt = 0;
+        immediate = 20;
+        #10;
+
+        //Shift 13 twice to left
+        rs_content = 0;
+        rt_content = 13;
+        funct = 6'h00;
+        shamt = 2;
+        immediate = 20;
+        #10;
+        
+        //Shift 5 to 1500 from imm field
+        opcode = 6'h8;
+        rs_content = 15;
+        rt_content = 0;
+        immediate = 1500;
+        #10;
+        
+        //Or Imm of 7 and 1024 from imm
+        opcode = 6'b010011;
+        rs_content = 7;
+        rt_content = 0;
+        immediate = 1024;
+        #10;
+
+        //generate address for load word
+        opcode = 6'h23;
+        rs_content = -8;
+        rt_content = 0;
+        immediate = 1024;
+        #10;
+
+        //signal on beq
+        opcode = 6'h4;
+        rs_content = 4;
+        rt_content = 4;
+        immediate = 1024;
+        #10;
+
+        //signal on beq
+        opcode = 6'h4;
+        rs_content = 4;
+        rt_content = 5;
+        immediate = 1024;
+        #10;
+
+    end
+
+    initial begin
+        $dumpfile("ALU32Bittb.vcd"); 
+        $dumpvars(0, alu32bittb);
+    end
+
 endmodule

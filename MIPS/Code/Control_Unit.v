@@ -72,3 +72,12 @@ module control_unit(
 	
 	
 endmodule
+
+module control_unit_tb();
+
+    initial begin
+        $dumpfile("control_unit_tb.vcd"); 
+        $dumpvars(0, control_unit_tb);
+    end
+
+endmodule
