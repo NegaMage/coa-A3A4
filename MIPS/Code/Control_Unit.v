@@ -75,6 +75,23 @@ endmodule
 
 module control_unit_tb();
 
+    wire  RegRead, RegWrite, MemRead, MemWrite, RegDst, Branch;
+    reg [5:0] opcode, funct;
+
+    control_unit testerboi(
+        .RegRead(RegRead),
+        .RegWrite(RegWrite),
+        .MemRead(MemRead),
+        .MemWrite(MemWrite),
+        .RegDst(RegDst),
+        .Branch(Branch),
+        .opcode(opcode),
+        .funct(funct)
+    );
+
+    
+
+
     initial begin
         $dumpfile("control_unit_tb.vcd"); 
         $dumpvars(0, control_unit_tb);

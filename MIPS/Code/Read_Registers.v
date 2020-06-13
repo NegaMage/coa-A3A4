@@ -30,30 +30,30 @@ module read_registers(
                 // LBU (Load byte unsigned)
                 if(opcode == 6'h24)
                 begin
-                    registers[rd][7:0] = write_data[7:0];
+                    registers[rd] = {{24{1'b0}}, write_data[7:0]};
                 end
                 // LHU (Load halfword unsigned)
                 if(opcode == 6'h25)begin
-                    registers[rd][15:0] = write_data[15:0];
+                    registers[rd] = {{16{1'b0}}, write_data[15:0]};
                 end
-                else begin   // LL(Load linked)
-                    registers[rd] = write_data;
-                end
+                // else begin   // LL(Load linked)
+                //     registers[rd] = write_data;
+                // end
             end
             else begin
                 // LBU(load byte unsigned)
                 if(opcode == 6'h24)
                 begin        
-                    registers[rt][7:0] = write_data[7:0];
+                    registers[rt] = {{24{1'b0}}, write_data[7:0]};
                 end
                 // LHU (Load halfword unsigned)
                 if(opcode == 6'h25)
                 begin        
-                    registers[rt][15:0] = write_data[15:0];
+                    registers[rt] = {{16{1'b0}}, write_data[15:0]};
                 end
-                else begin
-                    registers[rt] = write_data;
-                end
+                // else begin
+                //     registers[rt] = write_data;
+                // end
             end
             // Write back the updated values to the registers file
             registers[5'd0]=32'd0;
@@ -114,6 +114,8 @@ module read_registers_tb();
 
         // LBU into r14
         opcode = 6'h24;
+        rd = 5'd14;
+        RegDst = 1;
         write_data = 32'd5550123;
         #10;
 
@@ -125,6 +127,7 @@ module read_registers_tb();
         #10;
 
         // Read r0 and r14.
+        opcode = 6'dx;
         RegWrite=0;
         RegRead =1;
         RegDst = 0;
