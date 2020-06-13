@@ -40,7 +40,7 @@ module read_data_memory(
 
     initial 
     begin
-        $monitor("opcode : %6b, address : %32b, write data : %32b, read signal : %1b, write signal : %1b, Result : %32b\n",
+        $monitor("opcode : %6b, address : %32b, write data : %32b, read signal : %1b, write signal : %1b, output read data : %32b\n",
         opcode, address, write_data, MemRead, MemWrite, read_data);
     end
 

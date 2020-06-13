@@ -171,6 +171,7 @@ module alu64bittb();
         //Add 3 and 5
         opcode = 6'd31;
         xoxo = 9'd266;
+        si = 16'd1000;
         rs = 3;
         rt = 5;
         #10
@@ -209,6 +210,13 @@ module alu64bittb();
         opcode = 6'd36;
         rt = 8;
         si = 1000;
+        #10;
+
+        //Load doubleword
+        ds = 14'b1;
+        opcode = 6'd58;
+        rt = 4;
+        si = 250;
         #10;
 
     end

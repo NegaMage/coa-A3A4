@@ -1,5 +1,5 @@
 $date
-	Fri Jun 12 21:12:10 2020
+	Fri Jun 12 20:19:38 2020
 $end
 $version
 	Icarus Verilog
@@ -64,7 +64,7 @@ bx .
 b100001010 -
 bx ,
 bx +
-b1111101000 *
+bx *
 b101 )
 b11 (
 b11111 '
