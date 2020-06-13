@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module read_data_memory (
     output reg [63:0] read_data,
     input [63:0] address, 

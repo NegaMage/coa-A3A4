@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 /* Module designed to read and write to the main memory
 */
 

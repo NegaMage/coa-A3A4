@@ -13,6 +13,7 @@ module read_registers(
     initial 
     begin
         $readmemb("registers.mem", registers);  //Reads all the values stored in the 32 registers
+        registers[0]=64'd0;
     end
 
     always @(write_data)
@@ -21,6 +22,8 @@ module read_registers(
         begin
             /* RegWrite = 0 => Write to RT
                RegWrite = 1 => Write to RD    */
+            read_data_1 = 32'dx;
+            read_data_2 = 32'dx;
             if (RegDst)
             begin
                 if(opcode == 6'd34)     //Load Byte
@@ -48,11 +51,12 @@ module read_registers(
                     registers[rt] = write_data;
             end
             //Write back the values in the registers file
+            registers[0]=64'd0;
             $writememb("registers.mem", registers);
         end
     end
     
-    always @(read_data_1, read_data_2)
+    always @(rs, rt)
     begin
         //Read from registers
         if(RegRead)
@@ -61,4 +65,75 @@ module read_registers(
             read_data_2 = registers[rt];
         end
     end
+
+    initial begin
+        $monitor("opcode : %6b, read_data_1 : %32b, read_data_2 : %32b, write_data : %32b, rs : %5b, rt : %5b, rd : %5b, RegRead : %1b, RegWrite : %1b, RegDst : %1b\n", opcode, read_data_1, read_data_2, write_data, rs, rt, rd, RegRead, RegWrite, RegDst);
+    end
+
+endmodule
+
+module read_registers_tb();
+    wire [63:0] read_data_1, read_data_2;
+    reg [63:0] write_data;
+    reg [4:0] rs, rt, rd;
+    reg [5:0] opcode;
+    reg RegRead, RegWrite, RegDst, clk;
+
+    read_registers testerboi(
+        .read_data_1(read_data_1),
+        .read_data_2(read_data_2),
+        .write_data(write_data),
+        .rs(rs),
+        .rt(rt),
+        .rd(rd), 
+        .opcode(opcode),
+        .RegRead(RegRead),
+        .RegWrite(RegWrite),
+        .RegDst(RegDst),
+        .clk(clk)
+    );
+
+    initial begin
+        RegWrite=0;
+        RegRead =1;
+        RegDst = 0;
+        write_data = 32'd5550123;
+        // Read r0 and r11.
+        rs = 5'd0;
+        rt = 5'd11;
+        rd = 5'd14;
+        #10;
+
+        RegWrite=1;
+        RegRead =0;
+        RegDst = 1;
+
+        // LB into r14
+        opcode = 6'd34;
+        write_data = 32'd5550123;
+        #10;
+
+        // LHU into r0
+        rt = 5'd0;
+        RegDst = 0;
+        opcode = 6'd40;
+        write_data = 32'd5550123;
+        #10;
+
+        // Read r0 and r14.
+        RegRead =1;
+        RegWrite=0;
+        RegDst = 0;
+        rs = 5'd0;
+        rt = 5'd14;
+        #10;
+
+    end
+
+    initial begin
+        $dumpfile("read_registers.vcd"); 
+        $dumpvars(0, read_registers_tb);
+    end
+
+
 endmodule
