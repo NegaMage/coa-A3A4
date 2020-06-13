@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 /* Module designed to read the instruction and assign the various
    components of the instruction to suitable variables depending on the format
 */

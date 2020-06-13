@@ -1,0 +1,46 @@
+$date
+	Sat Jun 13 12:31:00 2020
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module read_instructions_tb $end
+$var wire 32 ! instruction [31:0] $end
+$var reg 32 " program_counter [31:0] $end
+$scope module instructionReader $end
+$var wire 32 # program_counter [31:0] $end
+$var reg 32 $ instruction [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b100000100001010000000010001000 $
+b0 #
+b0 "
+b100000100001010000000010001000 !
+$end
+#10
+b1000100001100000100000 !
+b1000100001100000100000 $
+b1 "
+b1 #
+#20
+b100000100001010000000010001000 !
+b100000100001010000000010001000 $
+b10 "
+b10 #
+#30
+b1000100001100000100000 !
+b1000100001100000100000 $
+b11 "
+b11 #
+#40
+b100000100001010000000010001000 !
+b100000100001010000000010001000 $
+b100 "
+b100 #
+#50
