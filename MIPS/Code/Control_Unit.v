@@ -65,7 +65,7 @@ module control_unit(
             MemRead = 1'b1;
         end
         // J type
-        // Do nothing!..
+        // Do nothing!
         // All signals already 0.
     end
 	
