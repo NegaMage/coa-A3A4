@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 /* Module designed to read the instruction and assign the various
    components of the instruction to suitable variables depending on the format
 */
@@ -75,5 +76,73 @@ module ins_parse(
             ds = instruction[15:2];
             xods = instruction[1:0];
         end
+    end
+endmodule
+
+module ins_parsetb();
+    wire [5:0] opcode;
+    wire [4:0] rs, rt, rd, bo, bi;
+    wire aa, lk, rc, oe;
+    wire [9:0] xox;
+    wire [8:0] xoxo; 
+    wire [15:0] si; 
+    wire [13:0] bd, ds;
+    wire [1:0] xods;
+    wire [23:0] li;
+    reg [31:0] instruction, p_count;
+
+    ins_parse instructionParser(
+        .opcode(opcode),
+        .rs(rs),
+        .rt(rt),
+        .rd(rd),
+        .bo(bo),
+        .bi(bi),
+        .aa(aa),
+        .lk(lk),
+        .rc(rc),
+        .oe(oe),
+        .xox(xox),
+        .xoxo(xoxo),
+        .si(si),
+        .bd(bd),
+        .ds(ds),
+        .xods(xods),
+        .li(li),
+        .instruction(instruction),
+        .p_count(p_count)
+    );
+
+    initial
+    begin
+        //add $1, $2, $3, - XO 
+        instruction = 32'b01111100001000100001101000010100;
+        #10;
+
+        //and $3, $4, $5 - X
+        instruction = 32'b01111100100000110010100000111000;
+        #10;
+
+        //xori $2, $6, 8 - D
+        instruction = 32'b01101000110000100000000000001000;
+        #10;
+
+        //bc $4, $5, 0x0fa5 - B
+        instruction = 32'b01001100000001010011111010010100;
+        #10;
+
+        //ba 0x0123 - I
+        instruction = 32'b01001000000000000000010010001110;
+        #10;
+
+        //ld $2, 5($4) - DS
+        instruction = 32'b11101000010001000000000000010100;
+        #10;
+
+    end
+
+    initial begin
+        $dumpfile("ins_parsetb.vcd");
+        $dumpvars(0,ins_parsetb);
     end
 endmodule
