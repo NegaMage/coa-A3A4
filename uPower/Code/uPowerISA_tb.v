@@ -14,13 +14,7 @@ initial
  begin
 #100 clock=~clock; #100 clock=~clock;
 #100 clock=~clock; #100 clock=~clock;
-#100 clock=~clock; #100 clock=~clock;
-#100 clock=~clock; #100 clock=~clock;
-#100 clock=~clock; #100 clock=~clock;
-#100 clock=~clock; #100 clock=~clock;
-#100 clock=~clock; #100 clock=~clock;
-#100 clock=~clock; #100 clock=~clock;
-#100 clock=~clock; #100 clock=~clock;
+#100 clock=~clock;
  end
 
 initial begin
