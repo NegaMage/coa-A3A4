@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 /* Module to behave like the control unit to set the necessary signals for the execution of an 
    instruction -
    1. RegDst - Which field of the instruction is the register to be written to
@@ -64,8 +65,26 @@ module control_unit(
         if(opcode != 6'h0 & (opcode == 6'h23))begin
             MemRead = 1'b1;
         end
-        // J type
+        //j instructions
         // Do nothing!
+        if(opcode == 6'h2) begin
+            MemRead  = 1'b0;
+            MemWrite = 1'b0;
+            RegWrite = 1'b0;
+            RegRead  = 1'b0;
+            RegDst   = 1'b0;
+            Branch   = 1'b0;
+        end
+
+        //jal
+        if(opcode == 6'h3) begin
+            MemRead  = 1'b0;
+            MemWrite = 1'b0;
+            RegWrite = 1'b1;
+            RegRead  = 1'b0;
+            RegDst   = 1'b0;
+            Branch   = 1'b0;
+        end
         // All signals already 0.
     end
 	
@@ -78,7 +97,7 @@ module control_unit_tb();
     wire  RegRead, RegWrite, MemRead, MemWrite, RegDst, Branch;
     reg [5:0] opcode, funct;
 
-    control_unit testerboi(
+    control_unit controller(
         .RegRead(RegRead),
         .RegWrite(RegWrite),
         .MemRead(MemRead),
@@ -89,8 +108,42 @@ module control_unit_tb();
         .funct(funct)
     );
 
-    
+    initial begin   
+        //add - R type
+        opcode = 6'b000000;
+        funct = 6'b100000;
+        #10;
 
+        //lw - I type
+        opcode = 6'b100011;
+        #10;
+        
+        //j - J type
+        opcode = 6'b000010;
+        #10;
+        
+        //sll - R type 
+        opcode = 6'b000000;
+        funct = 6'b000000;
+        #10;
+        
+        //sb - I type
+        opcode = 6'b101000;
+        #10;
+        
+        //jal - J type
+        opcode = 6'b000011;
+        #10;
+        
+        //bne - I type
+        opcode = 6'b000101;
+        #10;
+        
+        //nor - R type
+        opcode = 6'b000000;
+        funct = 6'b100111;
+        #10;
+    end
 
     initial begin
         $dumpfile("control_unit_tb.vcd"); 
