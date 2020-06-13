@@ -229,7 +229,7 @@ module alu32bittb();
         immediate = 20;
         #10;
         
-        //Shift 5 to 1500 from imm field
+        //Add 15 to 1500 from imm field
         opcode = 6'h8;
         rs_content = 15;
         rt_content = 0;

@@ -22,13 +22,12 @@ module ALU64bit(
 
       signed_rs = rs;
       signed_rt = rt;
-      zeroExtendSI = {{48{1'b0}},si[15:0]};
-      signExtendSI = {{48{si[15]}},si[15:0]};
-      zeroExtendDS = {{50{1'b0}},ds[13:0]};
+      zeroExtendSI <= {{48{1'b0}},si[15:0]};
+      signExtendSI <= {{48{si[15]}},si[15:0]};
+      zeroExtendDS <= {{50{1'b0}},ds[13:0]};
       Branch = 0;
       if(opcode == 6'd31 & xoxo != 9'd0)    //XO Format
       begin
-          
           case(xoxo)
 
             9'd266: //ADD
@@ -154,6 +153,7 @@ module alu64bittb();
         .rt(rt),
         .bo(bo),
         .bi(bi),
+        .si(si),
         .ds(ds),
         .xox(xox),
         .xoxo(xoxo),
@@ -171,52 +171,53 @@ module alu64bittb();
         //Add 3 and 5
         opcode = 6'd31;
         xoxo = 9'd266;
-        si = 16'd1000;
+        si = 16'd250;
         rs = 3;
         rt = 5;
         #10
 
-        //Sub 14 from 32
-        opcode = 6'd40;
-        xoxo = 9'd266;
-        rt = 32;
-        rs = 14;
-        #10
-
-        //AND of 123 and 632
+        //Sub 31 from 14
         opcode = 6'd31;
-        xox = 9'd28;
-        rt = 123;
-        rs = 632;
+        xoxo = 9'd40;
+        rt = 5'd31;
+        rs = 5'd14;
         #10
 
-        //XOR of 513 & 66
+        //AND of 12 and 13
+        xoxo = 9'd0;
+        opcode = 6'd31;
+        xox = 10'd28;
+        rt = 5'd12;
+        rs = 5'd13;
+        #10
+
+        //XOR of 11 & 17
+        xoxo = 9'd0;
         opcode = 6'd31;
         xox = 10'd316;
-        rt = 513;
-        rs = 66;
+        rt = 5'd11;
+        rs = 5'd17;
         #10
     
         //BNE
         opcode = 6'd19;
         aa = 0;
         xox = 10'd316;
-        rt = 4;
-        rs = 3;
+        rt = 5'd4;
+        rs = 5'd3;
         #10
 
         //Store word address generation
-        si = 15'b1;
+        si = 15'd1000;
         opcode = 6'd36;
-        rt = 8;
-        si = 1000;
+        rt = 5'd8;
         #10;
 
         //Load doubleword
-        ds = 14'b1;
+        ds = 14'd1;
         opcode = 6'd58;
-        rt = 4;
-        si = 250;
+        rt = 5'd4;
+        si = 15'd250;
         #10;
 
     end
