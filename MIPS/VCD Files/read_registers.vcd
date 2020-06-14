@@ -1,0 +1,83 @@
+$date
+	Sun Jun 14 14:18:20 2020
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module read_registers_tb $end
+$var wire 32 ! read_data_2 [31:0] $end
+$var wire 32 " read_data_1 [31:0] $end
+$var reg 1 # RegDst $end
+$var reg 1 $ RegRead $end
+$var reg 1 % RegWrite $end
+$var reg 1 & clk $end
+$var reg 6 ' opcode [5:0] $end
+$var reg 5 ( rd [4:0] $end
+$var reg 5 ) rs [4:0] $end
+$var reg 5 * rt [4:0] $end
+$var reg 32 + write_data [31:0] $end
+$scope module testerboi $end
+$var wire 1 # RegDst $end
+$var wire 1 $ RegRead $end
+$var wire 1 % RegWrite $end
+$var wire 1 & clk $end
+$var wire 6 , opcode [5:0] $end
+$var wire 5 - rd [4:0] $end
+$var wire 5 . rs [4:0] $end
+$var wire 5 / rt [4:0] $end
+$var wire 32 0 write_data [31:0] $end
+$var reg 32 1 read_data_1 [31:0] $end
+$var reg 32 2 read_data_2 [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b10101000100010110111001010101110 2
+b0 1
+bx 0
+b1011 /
+b0 .
+b1110 -
+bx ,
+bx +
+b1011 *
+b0 )
+b1110 (
+bx '
+x&
+0%
+1$
+0#
+b0 "
+b10101000100010110111001010101110 !
+$end
+#10
+b0 !
+b0 2
+b10101001011000000101011 +
+b10101001011000000101011 0
+b100100 '
+b100100 ,
+1#
+0$
+1%
+#20
+b100101 '
+b100101 ,
+0#
+b0 *
+b0 /
+#30
+b101011 !
+b101011 2
+b1110 *
+b1110 /
+1$
+0%
+bx '
+bx ,
+#40
