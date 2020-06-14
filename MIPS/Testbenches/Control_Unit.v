@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
-/* Module to behave like the control unit to set the necessary signals for the execution of an 
-   instruction -
+/* 
+Module to behave like the control unit to set the necessary signals for the execution of an instruction -
    1. RegDst - Which field of the instruction is the register to be written to
    2. RegWrite - Write to register file
    3. RegRead - Read from a register
@@ -18,9 +18,12 @@ module control_unit(
                 MemWrite,
                 RegDst, // if this is 0 select rt, otherwise select rd
                 Branch,
+                ALUSrc,
+                PCSrc,
+                MemToReg,
     input [5:0] opcode, funct
 );
-	
+
     always @(opcode, funct) 
     begin
 	    // Reset the signals to 0
@@ -30,6 +33,9 @@ module control_unit(
         RegRead  = 1'b0;
         RegDst   = 1'b0;
         Branch   = 1'b0;
+        ALUSrc   = 1'b0;
+        PCSrc    = 1'b0;
+        MemToReg = 1'b0;
 		
         // R type
         if(opcode == 6'h0) begin
@@ -39,62 +45,48 @@ module control_unit(
             if(funct != 6'h08) begin
                 RegWrite = 1'b1;
             end
+            // $display("RegWrite : %1b, RegDst : %1b, RegRead : %1b", RegWrite, RegDst, RegRead);
         end
         // LUI(load unsigned immediate) => no need to read any register => immediate value is written to a register
-        if(opcode != 6'b001111) begin
-            RegRead = 1'b1;
+        else if(opcode == 6'b001111) begin
+            RegWrite = 1'b1;
+            ALUSrc   = 1'b1;
         end
         // If r-type, don't enter this block
         // For r-type, beq, bne, sb, sh and sw there is no need to register write
-        if(opcode != 6'h0 & opcode != 6'h4 & opcode != 6'h5 & opcode != 6'h28 & opcode != 6'h29 & opcode != 6'h2b) begin
+        else if(opcode != 6'h0 & opcode != 6'h4 & opcode != 6'h5 & opcode != 6'h28 & opcode != 6'h29 & opcode != 6'h2b) begin
             RegWrite = 1'b1;
-            RegDst   = 1'b0;
         end
         // For branch instructions
-        if(opcode == 6'h4 | opcode == 6'h5) begin
+        else if(opcode == 6'h4 | opcode == 6'h5) begin
             Branch   = 1'b1;
         end
         // For memory write operation
         // sb, sh and sw use memory to write
-        if(opcode != 6'h0 & (opcode == 6'h28 | opcode == 6'h29 | opcode == 6'h2b)) begin
+        else if(opcode != 6'h0 & (opcode == 6'h28 | opcode == 6'h29 | opcode == 6'h2b)) begin
             MemWrite = 1'b1;
             RegRead  = 1'b1;
+            ALUSrc   = 1'b1;
         end
         // For memory read operation
         // lw, 
-        if(opcode != 6'h0 & (opcode == 6'h23))begin
+        else if(opcode != 6'h0 & (opcode == 6'h23))begin
             MemRead = 1'b1;
+            ALUSrc  = 1'b1;
+            MemToReg= 1'b1;
+            RegRead = 1'b1;
         end
-        //j instructions
-        // Do nothing!
-        if(opcode == 6'h2) begin
-            MemRead  = 1'b0;
-            MemWrite = 1'b0;
-            RegWrite = 1'b0;
-            RegRead  = 1'b0;
-            RegDst   = 1'b0;
-            Branch   = 1'b0;
+        // J type
+        else
+        begin
+            PCSrc = 1'b1;
         end
-
-        //jal
-        if(opcode == 6'h3) begin
-            MemRead  = 1'b0;
-            MemWrite = 1'b0;
-            RegWrite = 1'b1;
-            RegRead  = 1'b0;
-            RegDst   = 1'b0;
-            Branch   = 1'b0;
-        end
-        // All signals already 0.
     end
-	
-	
-	
 endmodule
 
 module control_unit_tb();
 
-    wire  RegRead, RegWrite, MemRead, MemWrite, RegDst, Branch;
+    wire  RegRead, RegWrite, MemRead, MemWrite, RegDst, Branch, ALUSrc, PCSrc, MemToReg;
     reg [5:0] opcode, funct;
 
     control_unit controller(
@@ -104,6 +96,9 @@ module control_unit_tb();
         .MemWrite(MemWrite),
         .RegDst(RegDst),
         .Branch(Branch),
+        .ALUSrc(ALUSrc),
+        .PCSrc(PCSrc),
+        .MemToReg(MemToReg),
         .opcode(opcode),
         .funct(funct)
     );

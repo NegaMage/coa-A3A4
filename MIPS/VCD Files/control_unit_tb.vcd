@@ -1,5 +1,5 @@
 $date
-	Sat Jun 13 18:59:25 2020
+	Sun Jun 14 08:54:32 2020
 $end
 $version
 	Icarus Verilog
@@ -11,17 +11,23 @@ $scope module control_unit_tb $end
 $var wire 1 ! RegWrite $end
 $var wire 1 " RegRead $end
 $var wire 1 # RegDst $end
-$var wire 1 $ MemWrite $end
-$var wire 1 % MemRead $end
-$var wire 1 & Branch $end
-$var reg 6 ' funct [5:0] $end
-$var reg 6 ( opcode [5:0] $end
+$var wire 1 $ PCSrc $end
+$var wire 1 % MemWrite $end
+$var wire 1 & MemToReg $end
+$var wire 1 ' MemRead $end
+$var wire 1 ( Branch $end
+$var wire 1 ) ALUSrc $end
+$var reg 6 * funct [5:0] $end
+$var reg 6 + opcode [5:0] $end
 $scope module controller $end
-$var wire 6 ) funct [5:0] $end
-$var wire 6 * opcode [5:0] $end
-$var reg 1 & Branch $end
-$var reg 1 % MemRead $end
-$var reg 1 $ MemWrite $end
+$var wire 6 , funct [5:0] $end
+$var wire 6 - opcode [5:0] $end
+$var reg 1 ) ALUSrc $end
+$var reg 1 ( Branch $end
+$var reg 1 ' MemRead $end
+$var reg 1 & MemToReg $end
+$var reg 1 % MemWrite $end
+$var reg 1 $ PCSrc $end
 $var reg 1 # RegDst $end
 $var reg 1 " RegRead $end
 $var reg 1 ! RegWrite $end
@@ -30,10 +36,13 @@ $upscope $end
 $enddefinitions $end
 #0
 $dumpvars
-b0 *
-b100000 )
-b0 (
-b100000 '
+b0 -
+b100000 ,
+b0 +
+b100000 *
+0)
+0(
+0'
 0&
 0%
 0$
@@ -42,52 +51,50 @@ b100000 '
 1!
 $end
 #10
+0#
+0"
+1!
+b100011 +
+b100011 -
+#20
+1!
+b10 +
+b10 -
+#30
+1"
+1#
+1!
+b0 *
+b0 ,
+b0 +
+b0 -
+#40
+1)
 1%
 0#
 1"
-1!
-b100011 (
-b100011 *
-#20
-0"
 0!
-0%
-b10 (
-b10 *
-#30
-1!
-1"
-1#
-b0 '
-b0 )
-b0 (
-b0 *
-#40
-1$
-0#
-1"
-0!
-b101000 (
-b101000 *
+b101000 +
+b101000 -
 #50
 1!
+0)
 0"
-0$
-b11 (
-b11 *
+0%
+b11 +
+b11 -
 #60
-1&
-1"
+1(
 0!
-b101 (
-b101 *
+b101 +
+b101 -
 #70
 1!
-1#
-0&
 1"
-b100111 '
-b100111 )
-b0 (
-b0 *
+1#
+0(
+b100111 *
+b100111 ,
+b0 +
+b0 -
 #80

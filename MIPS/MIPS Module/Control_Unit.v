@@ -1,5 +1,5 @@
-/* Module to behave like the control unit to set the necessary signals for the execution of an 
-   instruction -
+/* 
+Module to behave like the control unit to set the necessary signals for the execution of an instruction -
    1. RegDst - Which field of the instruction is the register to be written to
    2. RegWrite - Write to register file
    3. RegRead - Read from a register
@@ -15,7 +15,7 @@ module control_unit(
                 RegWrite,
                 MemRead,
                 MemWrite,
-                RegDst, // if this is 0 select rt, otherwise select rd
+                RegDst, // 0: rt, 1: rd
                 Branch,
                 ALUSrc,
                 PCSrc,
@@ -25,7 +25,7 @@ module control_unit(
 
     always @(opcode, funct) 
     begin
-	    // Reset the signals to 0
+	    // Reset all signals
         MemRead  = 1'b0;
         MemWrite = 1'b0;
         RegWrite = 1'b0;
