@@ -81,7 +81,4 @@ module control_unit(
             PCSrc = 1'b1;
         end
     end
-	
-	
-	
 endmodule

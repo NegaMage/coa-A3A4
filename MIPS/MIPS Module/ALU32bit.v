@@ -1,34 +1,33 @@
-/* Module designed to act as the ALU - takes in the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals
-   with the signedImm as arguments
+/* 
+ALU Module - takes the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals, with the signedImm as arguments
 */
 
-module ALU32bit(ALU_result, sig_branch, AluSrc, opcode, rs, rt, rs_content, rt_content, shamt, funct, immediate);
+module ALU32bit(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_value, shamt, funct, imm);
 	
     input [5:0] funct, opcode;
     input [4:0] shamt; // shift amount
-    input [15:0] immediate;
-    input [31:0] rs_content, rt_content; //inputs
+    input [15:0] imm;
+    input [31:0] rs_value, rt_value; //inputs
     input [4:0] rs, rt;
-    output reg sig_branch, AluSrc;
+    output reg branch_sig, AluSrc;
     output reg [31:0] ALU_result; //Output of the ALU
 	
     integer i; //Loop counter
-    // Temporary variable - temp for SRA - Shift Right Arithmetic
+    // Temporary variable - temp for SRA
     reg signed [31:0] temp, signed_rs, signed_rt; 
     reg [31:0] signExtend, zeroExtend;
 
     // initial begin
-    //     rs_content = 32'b0;
-    //     rt_content = 32'b0;
+    //     rs_value = 32'b0;
+    //     rt_value = 32'b0;
     // end
 
-    always @ (funct, rs_content, rt_content, shamt, immediate) begin
+    always @ (funct, rs_value, rt_value, shamt, imm) begin
 		
 		
         // Signed value assignment
-        signed_rs = rs_content;
-        signed_rt = rt_content;
-		// $monitor("rs : %32b, rt : %32b", rs_content, rt_content);
+        signed_rs = rs_value;
+        signed_rt = rt_value;
 			
         // R-type instruction
         if(opcode == 6'h0) begin
@@ -38,29 +37,29 @@ module ALU32bit(ALU_result, sig_branch, AluSrc, opcode, rs, rt, rs_content, rt_c
                 6'h20 : //ADD
                     begin
                     ALU_result = signed_rs + signed_rt;
-                    // $display("rs : %32b, rt : %32b", rs_content, rt_content);
+
                     end
                 6'h21 : //ADDU - Add unsigned
-                    ALU_result = rs_content + rt_content;
+                    ALU_result = rs_value + rt_value;
 					
                 6'h22 : //SUB - Subtract
                     ALU_result = signed_rs - signed_rt;
 					
                 6'h23 : //SUBU - Subtract unsigned
-                    ALU_result = rs_content - rt_content;
+                    ALU_result = rs_value - rt_value;
 					
                 6'h24 : //AND
-                    ALU_result = rs_content & rt_content;
+                    ALU_result = rs_value & rt_value;
 					
                 6'h25 : //OR
-                    ALU_result = rs_content | rt_content;
+                    ALU_result = rs_value | rt_value;
 					
                 6'h27 : //NOR
-                    ALU_result = ~(rs_content | rt_content);
+                    ALU_result = ~(rs_value | rt_value);
 					
                 6'h03 : //SRA (Shift Right Arithmetic - An arithmetic right shift replicates the sign bit as needed to fill bit positions)
                     begin
-                        temp = rt_content;
+                        temp = rt_value;
                         for(i = 0; i < shamt; i = i + 1) begin
                             temp = {temp[31],temp[31:1]}; //add the lsb for msb
                         end
@@ -69,14 +68,14 @@ module ALU32bit(ALU_result, sig_branch, AluSrc, opcode, rs, rt, rs_content, rt_c
                     end
 					
                 6'h02 : //SRL - Shift Right Logical >>
-                    ALU_result = (rt_content >> shamt);
+                    ALU_result = (rt_value >> shamt);
 			
                 6'h00 : //SLL - Shift Left Logical <<
-                    ALU_result = (rt_content << shamt);
+                    ALU_result = (rt_value << shamt);
 				
                 6'h2b : //SLTU - Set less than unsigned
                     begin
-                        if(rs_content < rt_content) begin
+                        if(rs_value < rt_value) begin
                             ALU_result = 1;
                         end else begin
                             ALU_result = 0;
@@ -96,13 +95,11 @@ module ALU32bit(ALU_result, sig_branch, AluSrc, opcode, rs, rt, rs_content, rt_c
 			
         end 
 		
-		
-		
         // I type
         else begin
 			
-            signExtend = {{16{immediate[15]}}, immediate};
-            zeroExtend = {{16{1'b0}}, immediate};
+            signExtend = {{16{imm[15]}}, imm};
+            zeroExtend = {{16{1'b0}}, imm};
 			
             case(opcode)
 		
@@ -110,19 +107,19 @@ module ALU32bit(ALU_result, sig_branch, AluSrc, opcode, rs, rt, rs_content, rt_c
                     ALU_result = signed_rs + signExtend;
 					
                 6'h9 : // ADDIU - Add Immediate unsigned
-                    ALU_result = rs_content + signExtend;
+                    ALU_result = rs_value + signExtend;
 					
                 6'b010010 : // ANDI - And Immediate
-                    ALU_result = rs_content & zeroExtend;
+                    ALU_result = rs_value & zeroExtend;
 					
                 6'h4 : // BEQ - Branch on Equal
                     begin
                         ALU_result = signed_rs - signed_rt;
                         if(ALU_result == 0) begin
-                            sig_branch = 1'b1;
+                            branch_sig = 1'b1;
                         end
                         else begin
-                            sig_branch = 1'b0;
+                            branch_sig = 1'b0;
                         end
                     end
 				
@@ -130,21 +127,21 @@ module ALU32bit(ALU_result, sig_branch, AluSrc, opcode, rs, rt, rs_content, rt_c
                     begin
                         ALU_result = signed_rs - signed_rt;
                         if(ALU_result != 0) begin
-                            sig_branch = 1'b1;
+                            branch_sig = 1'b1;
                             ALU_result = 1'b0;
                         end
                         else begin
-                            sig_branch = 1'b0;
+                            branch_sig = 1'b0;
                         end
                     end
 				
-                6'b010101 : // LUI - Load upper immediate
-                    ALU_result = {immediate, {16{1'b0}}};
+                6'b010101 : // LUI - Load upper imm
+                    ALU_result = {imm, {16{1'b0}}};
 				
                 6'b010011 : // ORI - Or Immediate
-                    ALU_result = rs_content | zeroExtend;
+                    ALU_result = rs_value | zeroExtend;
 				
-                6'b001010 : // SLTI - Set less than immediate
+                6'b001010 : // SLTI - Set less than imm
                     begin
                         if(signed_rs < $signed(signExtend)) begin
                             ALU_result = 1;
@@ -153,9 +150,9 @@ module ALU32bit(ALU_result, sig_branch, AluSrc, opcode, rs, rt, rs_content, rt_c
                         end
                     end
 				
-                6'b001011 : // SLTIU - Set less than immediate unsigned
+                6'b001011 : // SLTIU - Set less than imm unsigned
                     begin
-                        if(rs_content < signExtend) begin
+                        if(rs_value < signExtend) begin
                             ALU_result = 1;
                         end else begin
                             ALU_result = 0;
@@ -182,9 +179,9 @@ module ALU32bit(ALU_result, sig_branch, AluSrc, opcode, rs, rt, rs_content, rt_c
 		
     end
 
-    always @ (funct, rs, rt, shamt, immediate) 
+    always @ (funct, rs, rt, shamt, imm) 
     begin
-        $display("Opcode : %6b, RS : %32b, RT : %32b, signExtendImm = %32b, Result : %32b\n",opcode, rs_content, rt_content, signExtend, ALU_result);
+        $display("Opcode : %6b, RS : %32b, RT : %32b, signExtendImm = %32b, Result : %32b\n",opcode, rs_value, rt_value, signExtend, ALU_result);
     end
 	
 endmodule

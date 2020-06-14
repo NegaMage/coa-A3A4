@@ -1,15 +1,15 @@
 `timescale 1ns/1ns
-/* Module designed to act as the ALU - takes in the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals
-   with the signedImm as arguments
+/* 
+ALU Module - takes the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals, with the signedImm as arguments
 */
 
-module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, funct, immediate);
+module ALU32bit(ALU_result, branch_sig, opcode, rs_value, rt_value, shamt, funct, imm);
 	
     input [5:0] funct, opcode;
     input [4:0] shamt; // shift amount
-    input [15:0] immediate;
-    input [31:0] rs_content, rt_content; //inputs
-    output reg sig_branch;
+    input [15:0] imm;
+    input [31:0] rs_value, rt_value; //inputs
+    output reg branch_sig;
     output reg [31:0] ALU_result; //Output of the ALU
 	
     integer i; //Loop counter
@@ -17,12 +17,12 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
     reg signed [31:0] temp, signed_rs, signed_rt; 
     reg [31:0] signExtend, zeroExtend;
 
-    always @ (funct, rs_content, rt_content, shamt, immediate) begin
+    always @ (funct, rs_value, rt_value, shamt, imm) begin
 		
 		
         // Signed value assignment
-        signed_rs = rs_content;
-        signed_rt = rt_content;
+        signed_rs = rs_value;
+        signed_rt = rt_value;
 			
 			
         // R-type instruction
@@ -34,26 +34,26 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
                     ALU_result = signed_rs + signed_rt;
 				
                 6'h21 : //ADDU - Add unsigned
-                    ALU_result = rs_content + rt_content;
+                    ALU_result = rs_value + rt_value;
 					
                 6'h22 : //SUB - Subtract
                     ALU_result = signed_rs - signed_rt;
 					
                 6'h23 : //SUBU - Subtract unsigned
-                    ALU_result = rs_content - rt_content;
+                    ALU_result = rs_value - rt_value;
 					
                 6'h24 : //AND
-                    ALU_result = rs_content & rt_content;
+                    ALU_result = rs_value & rt_value;
 					
                 6'h25 : //OR
-                    ALU_result = rs_content | rt_content;
+                    ALU_result = rs_value | rt_value;
 					
                 6'h27 : //NOR
-                    ALU_result = ~(rs_content | rt_content);
+                    ALU_result = ~(rs_value | rt_value);
 					
                 6'h03 : //SRA (Shift Right Arithmetic - An arithmetic right shift replicates the sign bit as needed to fill bit positions)
                     begin
-                        temp = rt_content;
+                        temp = rt_value;
                         for(i = 0; i < shamt; i = i + 1) begin
                             temp = {temp[31],temp[31:1]}; //add the lsb for msb
                         end
@@ -62,14 +62,14 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
                     end
 					
                 6'h02 : //SRL - Shift Right Logical >>
-                    ALU_result = (rt_content >> shamt);
+                    ALU_result = (rt_value >> shamt);
 			
                 6'h00 : //SLL - Shift Left Logical <<
-                    ALU_result = (rt_content << shamt);
+                    ALU_result = (rt_value << shamt);
 				
                 6'h2b : //SLTU - Set less than unsigned
                     begin
-                        if(rs_content < rt_content) begin
+                        if(rs_value < rt_value) begin
                             ALU_result = 1;
                         end else begin
                             ALU_result = 0;
@@ -94,8 +94,8 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
         // I type
         else begin
 			
-            signExtend = {{16{immediate[15]}}, immediate};
-            zeroExtend = {{16{1'b0}}, immediate};
+            signExtend = {{16{imm[15]}}, imm};
+            zeroExtend = {{16{1'b0}}, imm};
 			
             case(opcode)
 		
@@ -103,19 +103,19 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
                     ALU_result = signed_rs + signExtend;
 					
                 6'h9 : // ADDIU - Add Immediate unsigned
-                    ALU_result = rs_content + signExtend;
+                    ALU_result = rs_value + signExtend;
 					
                 6'b010010 : // ANDI - And Immediate
-                    ALU_result = rs_content & zeroExtend;
+                    ALU_result = rs_value & zeroExtend;
 					
                 6'h4 : // BEQ - Branch on Equal
                     begin
                         ALU_result = signed_rs - signed_rt;
                         if(ALU_result == 0) begin
-                            sig_branch = 1'b1;
+                            branch_sig = 1'b1;
                         end
                         else begin
-                            sig_branch = 1'b0;
+                            branch_sig = 1'b0;
                         end
                     end
 				
@@ -123,21 +123,21 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
                     begin
                         ALU_result = signed_rs - signed_rt;
                         if(ALU_result != 0) begin
-                            sig_branch = 1'b1;
+                            branch_sig = 1'b1;
                             ALU_result = 1'b0;
                         end
                         else begin
-                            sig_branch = 1'b0;
+                            branch_sig = 1'b0;
                         end
                     end
 				
-                6'b010101 : // LUI - Load upper immediate
-                    ALU_result = {immediate, {16{1'b0}}};
+                6'b010101 : // LUI - Load upper imm
+                    ALU_result = {imm, {16{1'b0}}};
 				
                 6'b010011 : // ORI - Or Immediate
-                    ALU_result = rs_content | zeroExtend;
+                    ALU_result = rs_value | zeroExtend;
 				
-                6'b001010 : // SLTI - Set less than immediate
+                6'b001010 : // SLTI - Set less than imm
                     begin
                         if(signed_rs < $signed(signExtend)) begin
                             ALU_result = 1;
@@ -146,9 +146,9 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
                         end
                     end
 				
-                6'b001011 : // SLTIU - Set less than immediate unsigned
+                6'b001011 : // SLTIU - Set less than imm unsigned
                     begin
-                        if(rs_content < signExtend) begin
+                        if(rs_value < signExtend) begin
                             ALU_result = 1;
                         end else begin
                             ALU_result = 0;
@@ -179,7 +179,7 @@ module ALU32bit(ALU_result, sig_branch, opcode, rs_content, rt_content, shamt, f
     initial 
     begin
         $monitor("Opcode : %6b, RS : %32b, RT : %32b, signExtendImm = %32b, Result : %32b\n",
-        opcode, rs_content, rt_content, signExtend, ALU_result);
+        opcode, rs_value, rt_value, signExtend, ALU_result);
     end
 	
 endmodule
@@ -187,81 +187,81 @@ endmodule
 module alu32bittb();
     reg [5:0] funct, opcode;
     reg [4:0] shamt; // shift amount
-    reg [15:0] immediate;
-    reg [31:0] rs_content, rt_content; //inputs
-    wire sig_branch;
+    reg [15:0] imm;
+    reg [31:0] rs_value, rt_value; //inputs
+    wire branch_sig;
     wire [31:0] ALU_result; //Output of the ALU
 
 
     ALU32bit testerboi(.ALU_result(ALU_result),
-             .sig_branch(sig_branch),
+             .branch_sig(branch_sig),
              .opcode(opcode),
-             .rs_content(rs_content),
-             .rt_content(rt_content),
+             .rs_value(rs_value),
+             .rt_value(rt_value),
              .shamt(shamt),
              .funct(funct),
-             .immediate(immediate));
+             .imm(imm));
 
     initial begin
         opcode = 6'h0;
         
         //Add 12 and -10
-        rs_content = 12;
-        rt_content = -10;
+        rs_value = 12;
+        rt_value = -10;
         funct = 6'h20;
         shamt = 0;
-        immediate = 20;
+        imm = 20;
         #10;
 
         //Subtract 3 from 1
-        rs_content = 1;
-        rt_content = 3;
+        rs_value = 1;
+        rt_value = 3;
         funct = 6'h22;
         shamt = 0;
-        immediate = 20;
+        imm = 20;
         #10;
 
         //Shift 13 twice to left
-        rs_content = 0;
-        rt_content = 13;
+        rs_value = 0;
+        rt_value = 13;
         funct = 6'h00;
         shamt = 2;
-        immediate = 20;
+        imm = 20;
         #10;
         
         //Add 15 to 1500 from imm field
         opcode = 6'h8;
-        rs_content = 15;
-        rt_content = 0;
-        immediate = 1500;
+        rs_value = 15;
+        rt_value = 0;
+        imm = 1500;
         #10;
         
         //Or Imm of 7 and 1024 from imm
         opcode = 6'b010011;
-        rs_content = 7;
-        rt_content = 0;
-        immediate = 1024;
+        rs_value = 7;
+        rt_value = 0;
+        imm = 1024;
         #10;
 
         //generate address for load word
         opcode = 6'h23;
-        rs_content = -8;
-        rt_content = 0;
-        immediate = 1024;
+        rs_value = -8;
+        rt_value = 0;
+        imm = 1024;
         #10;
 
         //signal on beq
         opcode = 6'h4;
-        rs_content = 4;
-        rt_content = 4;
-        immediate = 1024;
+        rs_value = 4;
+        rt_value = 4;
+        imm = 1024;
         #10;
 
         //signal on beq
         opcode = 6'h4;
-        rs_content = 4;
-        rt_content = 5;
-        immediate = 1024;
+        rs_value = 4;
+        rt_value = 5;
+        imm = 1024;
         #10;
 
     end

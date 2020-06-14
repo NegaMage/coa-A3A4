@@ -23,30 +23,30 @@ module MIPS_core(clock);
     wire [5:0] funct;
     wire [4:0] rs, rt, rd, shamt;
     wire [25:0] address;
-    wire [15:0] immediate;
+    wire [15:0] imm;
     wire [5:0] opcode;
 	
     // Signals
     wire RegRead, RegWrite, RegDst;  
     wire MemRead, MemWrite, MemToReg;
-    wire branch_signal;
+    wire branch_sig;
     wire PCSrc, ALUSrc;
 	
     // Registers contents
-    wire [31:0] write_data, rs_content, rt_content, memory_read_data;
+    wire [31:0] write_data, rs_value, rt_value, memory_read_data;
 	
     // Instantiating all necessary modules
     read_instructions inst_mem (instruction, PC);
 	
-    ins_parser parse (opcode, rs, rt, rd, shamt, funct, immediate, address, instruction, PC);
+    ins_parser parse (opcode, rs, rt, rd, shamt, funct, imm, address, instruction, PC);
 	
-    control_unit signals (RegRead, RegWrite, MemRead, MemWrite, RegDst, ALUSrc, PCSrc, MemToReg, branch_signal, opcode, funct);
+    control_unit signals (RegRead, RegWrite, MemRead, MemWrite, RegDst, ALUSrc, PCSrc, MemToReg, branch_sig, opcode, funct);
 								 
-    ALU32bit alu_process (write_data, branch_signal, ALUSrc, opcode, rs, rt, rs_content, rt_content, shamt, funct, immediate);
+    ALU32bit al_unit (write_data, branch_sig, ALUSrc, opcode, rs, rt, rs_value, rt_value, shamt, funct, imm);
 	
-    read_data_memory dataMemory (memory_read_data, write_data, rt_content, opcode, rs, MemRead, MemWrite, MemToReg);
+    read_data_memory dataMemory (memory_read_data, write_data, rt_value, opcode, rs, MemRead, MemWrite, MemToReg);
 	
-    read_registers contents (rs_content, rt_content, write_data, rs, rt, rd, opcode, RegRead, RegWrite, RegDst, clock);
+    read_registers contents (rs_value, rt_value, write_data, rs, rt, rd, opcode, RegRead, RegWrite, RegDst, clock);
 	
     // PC operations - The next instruction is read only when the clock is at positive edge
     always @(posedge clock) begin 
@@ -56,11 +56,11 @@ module MIPS_core(clock);
         end
         // JUMP REGISTER
         else if(opcode == 6'h0 & funct == 6'h08)begin
-            PC = rs_content;
+            PC = rs_value;
         end
         // BRANCH
-        else if(write_data == 0 & branch_signal == 1) begin
-            PC = PC + 1 + $signed(immediate); 
+        else if(write_data == 0 & branch_sig == 1) begin
+            PC = PC + 1 + $signed(imm); 
         end
         else begin
             PC = PC + 1;
