@@ -1,15 +1,16 @@
-/* Module designed to read and write to the main memory
+/* 
+Module for reading and writing to main memory, stored as data.mem
 */
 
-module read_data_memory(
-    output reg [31:0] read_data,  //The data read from the main memory (from the given address)
-    input  [31:0] address, write_data, //The ADDRESS and WRITE_DATA are inputs to this module after ALU processing
+module memory_reader(
+    output reg [31:0] read_data,//The data read from the main memory (from the given address)
+    input  [31:0] address, write_data,//The ADDRESS and WRITE_DATA are inputs to this module after ALU processing
     input [5:0] opcode,
     input [4:0] rs,
-    input MemRead,MemWrite,MemToReg    // Read and Write signals to main memory
+    input MemRead,MemWrite,MemToReg//Read and Write signals to main memory
 );
 	
-    reg [31:0] data_mem [255:0];   // The contents of the main memory
+    reg [31:0] data_mem [255:0];   //The contents of the main memory
     reg [31:0] reg_mem [31:0];
 
     always @(address, MemWrite) begin
@@ -30,8 +31,8 @@ module read_data_memory(
     end
 	
     always @(address) begin
-        $readmemb("data.mem", data_mem, 31 ,0); // adjust according to the number of entries in data.mem
-        $readmemb("registers.mem", reg_mem, 31, 0); //32 registers so..
+        $readmemb("data.mem", data_mem, 31 ,0); //adjust according to the number of entries in data.mem
+        $readmemb("registers.mem", reg_mem, 31, 0); 
         if(MemRead) begin
             read_data = data_mem[address];
         end

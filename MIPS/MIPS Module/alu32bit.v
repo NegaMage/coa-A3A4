@@ -2,7 +2,7 @@
 ALU Module - takes the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals, with the signedImm as arguments
 */
 
-module ALU32bit(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_value, shamt, funct, imm);
+module ALU(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_value, shamt, funct, imm);
 	
     input [5:0] funct, opcode;
     input [4:0] shamt; // shift amount

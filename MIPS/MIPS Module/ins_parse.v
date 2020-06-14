@@ -1,7 +1,7 @@
-/* Module designed to read the instruction and assign the various
-   components of the instruction to suitable variables depending on the format
+/* 
+Module to take in a 32 bit wide mips instruction and split into relevant fields for sending to other modules.
 */
-module ins_parser(
+module instruction_parser(
     output wire [5:0] opcode,
     output reg [4:0] rs, rt, rd, shamt, 
     output reg [5:0] funct,
@@ -14,13 +14,13 @@ module ins_parser(
 	
     always @(instruction) begin
 
-        rs = 5'b00000;
-        rt = 5'b00000;
-        rd = 5'b00000;
-        shamt = 5'b00000;
-        funct = 6'b000000;
-        immediate = 16'b0000000000000000;
-        address = 26'b00000000000000000000000000;
+        rs = 5'd0;
+        rt = 5'd0;
+        rd = 5'd0;
+        shamt = 5'd0;
+        funct = 6'd0;
+        immediate = 16'd0;
+        address = 26'd0;
 
         if(opcode == 6'h0) 
         begin        //R-type 

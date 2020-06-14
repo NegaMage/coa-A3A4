@@ -1,10 +1,10 @@
 // MIPS test bench - To drive and simulate the entire MIPS ALU 
-`include "MIPS_core.v"
+`include "MIPS_main.v"
 module tb_MIPS_core ();
 
     reg clk;
 	
-    MIPS_core test(.clock(clk));
+    MIPS_main mips(.clock(clk));
 
     initial 
     begin 
@@ -15,9 +15,5 @@ module tb_MIPS_core ();
     always begin 
         #100 clk = ~clk;
     end
-
-    // always @(clk) begin
-    //     $display("Clock : %1b", clk);
-    // end
 
 endmodule

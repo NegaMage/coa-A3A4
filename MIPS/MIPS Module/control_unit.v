@@ -10,7 +10,7 @@ Module to behave like the control unit to set the necessary signals for the exec
    8. MemToReg - Source of write_data (data to be written to the register file)
    9. Branch -  When a branch/jump instruction is used
 */
-module control_unit(
+module signal_gen(
     output reg  RegRead,
                 RegWrite,
                 MemRead,
