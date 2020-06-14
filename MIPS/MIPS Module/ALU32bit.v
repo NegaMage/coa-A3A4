@@ -1,5 +1,5 @@
 /* 
-ALU Module - takes the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals, with the signedImm as arguments
+AL_Unit to take opcode, register values, shift amount, value in immediate bits, and return a branch signal, ALU source signal and the ALU result.
 */
 
 module ALU32bit(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_value, shamt, funct, imm);
@@ -7,20 +7,15 @@ module ALU32bit(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_val
     input [5:0] funct, opcode;
     input [4:0] shamt; // shift amount
     input [15:0] imm;
-    input [31:0] rs_value, rt_value; //inputs
+    input [31:0] rs_value, rt_value;
     input [4:0] rs, rt;
     output reg branch_sig, AluSrc;
-    output reg [31:0] ALU_result; //Output of the ALU
+    output reg [31:0] ALU_result;
 	
     integer i; //Loop counter
     // Temporary variable - temp for SRA
     reg signed [31:0] temp, signed_rs, signed_rt; 
     reg [31:0] signExtend, zeroExtend;
-
-    // initial begin
-    //     rs_value = 32'b0;
-    //     rt_value = 32'b0;
-    // end
 
     always @ (funct, rs_value, rt_value, shamt, imm) begin
 		

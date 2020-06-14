@@ -1,5 +1,5 @@
 /* 
-Module designed to read the instruction and assign the various components of the instruction to suitable variables depending on the format
+Module for converting a 32 bit mips instruction into the separate parts that can be sent to different modules. For ease of coding it generates all possible parts of the instruction, regardless of whether they'll be used.
 */
 module ins_parser(
     output wire [5:0] opcode,

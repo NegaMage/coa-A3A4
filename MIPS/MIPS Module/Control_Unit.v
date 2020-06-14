@@ -1,5 +1,5 @@
 /* 
-Module to behave like the control unit to set the necessary signals for the execution of an instruction -
+Module to generate appropriate signals using the opcode and funct for R type instructions.
    1. RegDst - Which field of the instruction is the register to be written to
    2. RegWrite - Write to register file
    3. RegRead - Read from a register
@@ -7,7 +7,7 @@ Module to behave like the control unit to set the necessary signals for the exec
    5. PCSrc - Source for PC (next instruction to be executed)
    6. MemRead - Read from the main memory
    7. MemWrite - Write to the main memory
-   8. MemToReg - Source of write_data (data to be written to the register file)
+   8. MemToReg - Source of write_data
    9. Branch -  When a branch/jump instruction is used
 */
 module control_unit(
