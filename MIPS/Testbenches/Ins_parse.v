@@ -1,12 +1,12 @@
 `timescale 1ns/1ns
-/* Module designed to read the instruction and assign the various
-   components of the instruction to suitable variables depending on the format
+/* 
+Module designed to read the instruction and assign the various components of the instruction to suitable variables depending on the format
 */
 module ins_parser(
     output wire [5:0] opcode,
     output reg [4:0] rs, rt, rd, shamt, 
     output reg [5:0] funct,
-    output reg[15:0] immediate,
+    output reg[15:0] imm,
     output reg [25:0] address,
     input [31:0] instruction, p_count
 );
@@ -14,6 +14,15 @@ module ins_parser(
     assign opcode = instruction[31:26];
 	
     always @(instruction) begin
+
+        rs = 5'd0;
+        rt = 5'd0;
+        rd = 5'd0;
+        shamt = 5'd0;
+        funct = 6'd0;
+        imm = 16'd0;
+        address = 26'd0;
+
         if(opcode == 6'h0) 
         begin        //R-type 
             shamt = instruction[10:6];
@@ -30,17 +39,16 @@ module ins_parser(
         begin                               // I-type
             rt = instruction[20:16];
             rs = instruction[25:21];
-            immediate = instruction[15:0];
+            imm = instruction[15:0];
         end
     end
-	
 endmodule
 
 module ins_parsertb();
     wire [5:0] opcode;
     wire [4:0] rs, rt, rd, shamt; 
     wire [5:0] funct;
-    wire [15:0] immediate;
+    wire [15:0] imm;
     wire [25:0] address;
     reg [31:0] instruction, p_count;  //check the data type
 
@@ -51,7 +59,7 @@ module ins_parsertb();
         .rd(rd),
         .shamt(shamt),
         .funct(funct),
-        .immediate(immediate),
+        .imm(imm),
         .address(address),
         .instruction(instruction),
         .p_count(p_count)
@@ -98,7 +106,7 @@ module ins_parsertb();
     end
 
     initial begin
-        $dumpfile("Ins_parsetb.vcd");
+        $dumpfile("ins_parsetb.vcd");
         $dumpvars(0,ins_parsertb);
     end
 endmodule
