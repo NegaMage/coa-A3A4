@@ -4,6 +4,8 @@ The video demos are uploaded at:
 
 https://drive.google.com/drive/folders/1x6ZXkRyPD3YazumilLAJqLHjfP6HGpEI?usp=sharing
 
+The code is on github, at:
+https://github.com/NegaMage/coa-A3A4
 
 These video demonstrations are submitted as part of course requirements for CS250, by students of BTech CSE-2022.
 

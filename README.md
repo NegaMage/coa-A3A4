@@ -11,6 +11,10 @@ Video demos are up! at :
 
 https://drive.google.com/drive/folders/1x6ZXkRyPD3YazumilLAJqLHjfP6HGpEI?usp=sharing
 
+The code is on github, at:
+
+https://github.com/NegaMage/coa-A3A4
+
 ## MIPS part
 
 Run
