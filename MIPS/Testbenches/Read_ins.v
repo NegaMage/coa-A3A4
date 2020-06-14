@@ -1,53 +1,45 @@
 `timescale 1ns/1ns
-/* Test Module designed to read the instructions from a .mem file containing the 32-bit MIPS instructions
-   in binary
+/* 
+Module to read instructions from instructions.mem, which stores the 32 bit mips instructions in binary.
 */
-module read_instructions(instruction, program_counter);
+module read_instructions(instruction, pc);
 
-    input [31:0] program_counter;
+    input [31:0] pc;
     output reg [31:0] instruction;
 	
-    reg [31:0] instructions [31:0];  //set to the number of instructions in the file
+    reg [31:0] instructions [2:0]; //hardcoded to the number of instructions in the file
 	
     initial begin 
-        $readmemb("instructions.mem", instructions, 0, 31); 
+        $readmemb("instructions.mem", instructions, 0, 2); 
     end
 	
-    always @ (program_counter) begin
-        instruction = instructions[program_counter];
+    always @ (pc) begin
+        instruction = instructions[pc];
     end
 
 endmodule
 
 module read_instructions_tb();
-    reg [31:0] program_counter;
+    reg [31:0] pc;
     wire [31:0] instruction;
 
     read_instructions instructionReader(
-        .program_counter(program_counter),
+        .pc(pc),
         .instruction(instruction)
     );
 
     initial begin
 
         //first instruction
-        program_counter = 32'b0;
+        pc = 32'b0;
         #10;
 
         //second instruction
-        program_counter = program_counter + 1;
+        pc = pc + 1;
         #10;
 
         //third instruction
-        program_counter = program_counter + 1;
-        #10;
-
-        //fourth instruction
-        program_counter = program_counter + 1;
-        #10;
-
-        //fifth instruction
-        program_counter = program_counter + 1;
+        pc = pc + 1;
         #10;
     end
 
