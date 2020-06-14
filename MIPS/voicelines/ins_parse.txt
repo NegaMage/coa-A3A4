@@ -25,3 +25,13 @@ So bits 25 to 0 are set to address
 
 //Upower
 while for Upower...
+(Show ref image 2)
+We have these instruction types
+As we can see few instruction types have an extended opcode for identifiying the type of the function
+
+(Scroll to line 39)
+Now for XO type - we comapre the opcode and the extended Opcode to idenntify its type
+and assign rs, rt, rd .... respectively
+  (Highlight as u speak)
+
+(similary show for all instrction types...)

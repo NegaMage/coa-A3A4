@@ -3,21 +3,21 @@
 */
 
 module ins_parse(
-    output wire [5:0] opcode, 
-    output reg [4:0] rs, rt, rd, bo, bi, 
+    output wire [5:0] opcode,
+    output reg [4:0] rs, rt, rd, bo, bi,
     output reg aa, lk, rc, oe,
     output reg [9:0] xox,
-    output reg [8:0] xoxo, 
-    output reg [15:0] si, 
+    output reg [8:0] xoxo,
+    output reg [15:0] si,
     output reg [13:0] bd, ds,
-    output reg [1:0] xods, 
+    output reg [1:0] xods,
     output reg [23:0] li,
     input [31:0] instruction, p_count
 );
 
     assign opcode = instruction[31:26];
 
-    always @(instruction) 
+    always @(instruction)
     begin
         rs = 5'b00000;
         rt = 5'b00000;
@@ -35,6 +35,7 @@ module ins_parse(
         ds = 14'b00000000000000;
         xods = 2'b00;
         li = 24'b000000000000000000000000;
+        
         //XO
         if(opcode == 6'd31 & (instruction[9:1] == 9'd266 | instruction[9:1] == 9'd40))
         begin
@@ -61,7 +62,7 @@ module ins_parse(
         else if(opcode == 6'd14 | opcode == 6'd15 | opcode == 6'd28 | opcode == 6'd24 | opcode == 6'd26 | opcode == 6'd32 | opcode == 6'd36 | opcode == 6'd37 |opcode == 6'd40 | opcode == 6'd42 |opcode == 6'd44 |opcode == 6'd34 |opcode == 6'd38)
         begin
             rd = instruction[25:21];
-            rs = instruction[20:16];   
+            rs = instruction[20:16];
             si = instruction[15:0];
             // $display("RD : %5b\n, RS : %5b\n", rd, rs);
         end
