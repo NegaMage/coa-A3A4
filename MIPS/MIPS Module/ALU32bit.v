@@ -13,7 +13,7 @@ module ALU32bit(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_val
     output reg [31:0] ALU_result;
 	
     integer i; //Loop counter
-    // Temporary variable - temp for SRA
+    // Temporary variable - temp for SRA (shift right arithmetic)
     reg signed [31:0] temp, signed_rs, signed_rt; 
     reg [31:0] signExtend, zeroExtend;
 
@@ -56,7 +56,7 @@ module ALU32bit(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_val
                     begin
                         temp = rt_value;
                         for(i = 0; i < shamt; i = i + 1) begin
-                            temp = {temp[31],temp[31:1]}; //add the lsb for msb
+                            temp = {temp[31],temp[31:1]}; //append the lsb to the msb
                         end
 					
                     ALU_result = temp;

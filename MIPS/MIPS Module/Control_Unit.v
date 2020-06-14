@@ -44,14 +44,13 @@ module control_unit(
             if(funct != 6'h08) begin
                 RegWrite = 1'b1;
             end
-            // $display("RegWrite : %1b, RegDst : %1b, RegRead : %1b", RegWrite, RegDst, RegRead);
         end
         // LUI(load unsigned immediate) => no need to read any register => immediate value is written to a register
         else if(opcode == 6'b001111) begin
             RegWrite = 1'b1;
             ALUSrc   = 1'b1;
         end
-        // If r-type, don't enter this block
+
         // For r-type, beq, bne, sb, sh and sw there is no need to register write
         else if(opcode != 6'h0 & opcode != 6'h4 & opcode != 6'h5 & opcode != 6'h28 & opcode != 6'h29 & opcode != 6'h2b) begin
             RegWrite = 1'b1;
@@ -60,15 +59,13 @@ module control_unit(
         else if(opcode == 6'h4 | opcode == 6'h5) begin
             Branch   = 1'b1;
         end
-        // For memory write operation
-        // sb, sh and sw use memory to write
+        // For memory write operation - sb, sh and sw
         else if(opcode != 6'h0 & (opcode == 6'h28 | opcode == 6'h29 | opcode == 6'h2b)) begin
             MemWrite = 1'b1;
             RegRead  = 1'b1;
             ALUSrc   = 1'b1;
         end
-        // For memory read operation
-        // lw, 
+        // For memory read operation - lw
         else if(opcode != 6'h0 & (opcode == 6'h23))begin
             MemRead = 1'b1;
             ALUSrc  = 1'b1;

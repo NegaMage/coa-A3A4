@@ -11,7 +11,7 @@ MIPS Core module is where we put everything together, and if connected properly 
 
 module MIPS_core(clock);
 
-    input clock;   // Execution happens only at pos-edge
+    input clock;
 	
     // Program counter
     reg[31:0] PC = 32'b0; 
@@ -19,14 +19,14 @@ module MIPS_core(clock);
     // Instruction
     wire [31:0] instruction;
 	
-    // Parse instruction
+    // Parsed instruction
     wire [5:0] funct;
     wire [4:0] rs, rt, rd, shamt;
     wire [25:0] address;
     wire [15:0] imm;
     wire [5:0] opcode;
 	
-    // Signals
+    // Control Unit Signals
     wire RegRead, RegWrite, RegDst;  
     wire MemRead, MemWrite, MemToReg;
     wire branch_sig;
