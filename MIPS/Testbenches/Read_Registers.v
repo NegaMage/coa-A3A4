@@ -10,8 +10,6 @@ module read_registers(
     input RegRead, RegWrite, RegDst, clk   // RegRead and RegWrite are signals that indicate whether the instruction needs to read from registers and/or write to a register
 );
 
-    // clk isn't used. I tried making it synch to clock, but I couldn't get the timing delay to work properly. So we ended up having to rewrite a lot of it and taking out all the clock parts.
-
     reg [31:0] registers [31:0];    // The set of 32 registers (32-bit)
 	
     initial begin
@@ -19,7 +17,7 @@ module read_registers(
         registers[5'd0] = 32'd0;
     end
 	
-    always @(write_data) begin    // If a change in the data to be written is noticed
+    always @(rd, write_data) begin    // If a change in the data to be written is noticed
         if(RegWrite) begin
             /* RegWrite = 0 => Write to RT
                RegWrite = 1 => Write to RD

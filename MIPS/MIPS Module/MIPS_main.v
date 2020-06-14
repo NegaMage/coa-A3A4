@@ -38,7 +38,7 @@ module MIPS_main(clock);
     // Instantiating all necessary modules
     instr_reader instr_mem (instruction, PC);
 	
-    instruction_parser splitter (opcode, rs, rt, rd, shamt, funct, imm, address, instruction, PC);
+    ins_parser splitter (opcode, rs, rt, rd, shamt, funct, imm, address, instruction, PC);
 	
     signal_gen control_signals (RegRead, RegWrite, MemRead, MemWrite, RegDst, ALUSrc, PCSrc, MemToReg, branch_sig, opcode, funct);
 								 

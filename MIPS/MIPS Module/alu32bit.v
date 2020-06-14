@@ -176,12 +176,16 @@ module ALU(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_value, s
             endcase
 		
         end
+
+        begin
+            $display("Opcode : %6b, RS : %32b, RT : %32b, signExtendImm = %32b, Result : %32b\n",opcode, rs_value, rt_value, signExtend, ALU_result);
+        end
 		
     end
 
-    always @ (funct, rs, rt, shamt, imm) 
-    begin
-        $display("Opcode : %6b, RS : %32b, RT : %32b, signExtendImm = %32b, Result : %32b\n",opcode, rs_value, rt_value, signExtend, ALU_result);
-    end
+    // always @ (funct, rs, rt, shamt, imm) 
+    // begin
+    //     $display("Opcode : %6b, RS : %32b, RT : %32b, signExtendImm = %32b, Result : %32b\n",opcode, rs_value, rt_value, signExtend, ALU_result);
+    // end
 	
 endmodule
