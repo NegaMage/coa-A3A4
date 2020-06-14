@@ -1,11 +1,11 @@
 $date
-	Fri Jun 12 23:16:15 2020
+	Sun Jun 14 16:09:56 2020
 $end
 $version
 	Icarus Verilog
 $end
 $timescale
-	1s
+	1ns
 $end
 $scope module read_data_memory_tb $end
 $var wire 64 ! read_data [63:0] $end

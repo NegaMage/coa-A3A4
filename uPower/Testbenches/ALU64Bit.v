@@ -8,10 +8,10 @@ module ALU64bit(
     input [5:0] opcode,
     input [4:0] rs, rt, bo, bi,
     input [15:0] si,
-    input [13:0] ds, 
+    input [13:0] ds,
     input [9:0] xox,
     input [8:0] xoxo,
-    input aa, 
+    input aa,
     input [1:0] xods);
 
     reg signed [63:0] temp, signed_rt, signed_rs;
@@ -35,7 +35,7 @@ module ALU64bit(
             9'd40 : //SUBF
                 ALU_result = signed_rt - signed_rs;
           endcase
-      end  
+      end
 
       else if(opcode == 6'd31 & xox != 10'd0)   //X Format
       begin
@@ -55,7 +55,7 @@ module ALU64bit(
         endcase
       end
 
-      else if(opcode == 6'd19)      //B Format 
+      else if(opcode == 6'd19)      //B Format
       begin
         if(aa == 1) //BEQ
         begin
@@ -74,13 +74,13 @@ module ALU64bit(
               ALU_result = 1'b0;
               end
             else
-              Branch = 1'b0; 
+              Branch = 1'b0;
         end
       end
 
       else if(opcode == 6'd18) //I Format
             Branch = 1'b1;
-    
+
       else if(si != 15'b0)      //D Format
       begin
           case(opcode)
@@ -105,31 +105,33 @@ module ALU64bit(
                 ALU_result = rt + signExtendSI;
             6'd42: //LHWA
                 ALU_result = rt + signExtendSI;
+            6'd40: //LHW
+            ALU_result = signed_rs + signExtendSI;
             6'd44: //SHW
                 ALU_result = rt + signExtendSI;
-            6'd34: //LB0    
+            6'd34: //LB0
                 ALU_result = rt + zeroExtendSI;
             6'd38: //SB
                 ALU_result = rt + signExtendSI;
           endcase
-      end  
+      end
 
       else if(ds != 14'b0)      //DS Format
       begin
         if(opcode == 6'd58)
             ALU_result = rt + zeroExtendDS;
         else if(opcode == 6'd62)
-            ALU_result = rt + zeroExtendDS;  
+            ALU_result = rt + zeroExtendDS;
       end
     end
 
     //Display
-    initial 
+    initial
     begin
         $monitor("Opcode : %6b, RS : %64b, RT : %64b, signExtendSI = %64b, zeroExtendSI = %64b, zeroExtendDS = %64b, Result : %64b\n",
         opcode, rs, rt, signExtendSI, zeroExtendSI, zeroExtendDS, ALU_result);
     end
-	
+
 endmodule
 
 module alu64bittb();
@@ -139,7 +141,7 @@ module alu64bittb();
     reg [5:0] opcode;
     reg [4:0] rs, rt, bo, bi;
     reg [15:0] si;
-    reg [13:0] ds; 
+    reg [13:0] ds;
     reg [9:0] xox;
     reg [8:0] xoxo;
     reg aa;
@@ -162,12 +164,12 @@ module alu64bittb();
     );
 
     initial begin
-        $dumpfile("ALU64Bittb.vcd"); 
+        $dumpfile("ALU64Bittb.vcd");
         $dumpvars(0, alu64bittb);
     end
 
     initial begin
-        
+
         //Add 3 and 5
         opcode = 6'd31;
         xoxo = 9'd266;
@@ -198,7 +200,7 @@ module alu64bittb();
         rt = 5'd11;
         rs = 5'd17;
         #10
-    
+
         //BNE
         opcode = 6'd19;
         aa = 0;
@@ -223,4 +225,3 @@ module alu64bittb();
     end
 
 endmodule
-

@@ -1,9 +1,9 @@
 `timescale 1ns/1ns
 module read_data_memory (
     output reg [63:0] read_data,
-    input [63:0] address, 
+    input [63:0] address,
     input [63:0] write_data,
-    input [5:0] opcode, 
+    input [5:0] opcode,
     input MemWrite, MemRead
 );
 
@@ -11,37 +11,37 @@ module read_data_memory (
 
     initial
     begin
-        $readmemb("data.mem", data_mem, 5, 0);
+        $readmemb("data.mem", data_mem);
     end
 
-    always @ (address) 
+    always @ (address)
     begin
-        if(MemWrite) 
+        if(MemWrite)
         begin
             //Store byte
-            if(opcode == 6'd38)     
+            if(opcode == 6'd38)
             begin
                 data_mem[address] = {{56{1'b0}}, write_data[7:0]};
             end
 
             //Store halfword
-            else if(opcode == 6'd44) 
+            else if(opcode == 6'd44)
             begin
                 data_mem[address] = {{48{1'b0}}, write_data[15:0]};
             end
-            
+
             //Store word
-            else if(opcode == 6'd36) 
+            else if(opcode == 6'd36)
             begin
                 data_mem[address] = {{32{1'b0}}, write_data[31:0]};
             end
             //store word by default
-            else 
+            else
             begin
                 data_mem[address] = write_data;
             end
             // Write the updated contents back to the data_mem file
-            $writememb("data.mem", data_mem);            
+            $writememb("data.mem", data_mem);
         end
         else if(MemRead)
         begin
@@ -69,7 +69,7 @@ module read_data_memory (
 
     end
 
-    initial 
+    initial
     begin
         $monitor("opcode : %6b, address : %32b, write data : %32b, read signal : %1b, write signal : %1b, output read data : %32b\n",
         opcode, address, write_data, MemRead, MemWrite, read_data);
@@ -132,7 +132,7 @@ module read_data_memory_tb();
     end
 
     initial begin
-        $dumpfile("read_data_memory.vcd"); 
+        $dumpfile("read_data_memory.vcd");
         $dumpvars(0, read_data_memory_tb);
     end
 

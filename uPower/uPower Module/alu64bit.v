@@ -1,4 +1,4 @@
-/* 
+/*
 ALU Module - takes the opcode, contents of the registers, all the other flags, and returns ALUResult  and ALUSrc and branch signals.
 */
 
@@ -9,10 +9,10 @@ module al_unit(
     input [5:0] opcode,
     input [4:0] rs, rt, rd, bo, bi,
     input [15:0] si,
-    input [13:0] ds, 
+    input [13:0] ds,
     input [9:0] xox,
     input [8:0] xoxo,
-    input aa, 
+    input aa,
     input [1:0] xods
 );
 
@@ -37,7 +37,7 @@ module al_unit(
             9'd40 : //SUBF
                 ALU_result = signed_rt - signed_rs;
           endcase
-      end  
+      end
 
       else if(opcode == 6'd31 & xox != 10'd0)   //X Format
       begin
@@ -57,7 +57,7 @@ module al_unit(
         endcase
       end
 
-      else if(opcode == 6'd19)      //B Format 
+      else if(opcode == 6'd19)      //B Format
       begin
         if(aa == 1) //BEQ
         begin
@@ -75,13 +75,13 @@ module al_unit(
               ALU_result = 1'b0;
               end
             else
-              Branch = 1'b0; 
+              Branch = 1'b0;
         end
       end
 
       else if(opcode == 6'd18) //I Format
             Branch = 1'b1;
-    
+
       else if(si != 15'b0)      //D Format
       begin
         //   $display("ADD");
@@ -109,30 +109,28 @@ module al_unit(
                 ALU_result = signed_rs + signExtendSI;
             6'd44: //SHW
                 ALU_result = signed_rs + signExtendSI;
-            6'd34: //LB0    
+            6'd34: //LB0
                 ALU_result = signed_rs + zeroExtendSI;
             6'd38: //SB
                 ALU_result = signed_rs + signExtendSI;
           endcase
-      end  
+      end
 
       else if(ds != 14'b0)      //DS Format
       begin
         if(opcode == 6'd58)
             ALU_result = signed_rs + zeroExtendDS;
         else if(opcode == 6'd62)
-            ALU_result = signed_rs + zeroExtendDS;  
+            ALU_result = signed_rs + zeroExtendDS;
       end
     end
 
     //Display
-    always @(rs, rt, bo, bi, si, xoxo, xox, xods)
+    // always @(rs, rt, bo, bi, si, xoxo, xox, xod s)
+    initial
     begin
         $monitor("Opcode : %6b\n, rs : %5b, rt : %5b, rd : %5b, \nRS : %64b\n, RT : %64b\n, signExtendSI = %64b\n, zeroExtendSI = %64b\n, zeroExtendDS = %64b\n, Result : %64b\n",
         opcode, rs, rt, rd, rs_value, rt_value, signExtendSI, zeroExtendSI, zeroExtendDS, ALU_result);
     end
-	
+
 endmodule
-
-
-

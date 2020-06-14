@@ -1,6 +1,7 @@
 /* uPowerISA Core Module is the centre of all operations that handles all the operations and instantiates
 all the necessary modules
 */
+
 `include "Control_Unit.v"
 `include "Instruction_parse.v"
 `include "ALU64Bit.v"
@@ -52,13 +53,13 @@ read_registers Registers(rs_content, rt_content,  write_data, rs, rt, rd, opcode
 
 // PC operations - The next instruction is read only when the clock is at positive edge
 
-always @(posedge clock) 
+always @(posedge clock)
  begin
      if(opcode == 6'd18)
        PC = {{8{1'b0}},li};
      else if(write_data == 0 & Branch == 1)
        PC = PC + 1 + $signed(bd);
-     else 
+     else
        PC = PC +1 ;
  end
 

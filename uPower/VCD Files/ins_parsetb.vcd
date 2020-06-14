@@ -1,11 +1,11 @@
 $date
-	Sat Jun 13 11:16:36 2020
+	Sun Jun 14 15:50:11 2020
 $end
 $version
 	Icarus Verilog
 $end
 $timescale
-	1s
+	1ns
 $end
 $scope module ins_parsetb $end
 $var wire 9 ! xoxo [8:0] $end
