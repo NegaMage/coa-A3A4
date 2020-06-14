@@ -1,6 +1,14 @@
-Please note that we have imported all these modules in mips core, and initialised an instance of the mips core in mips_tb.v. Here in mips_tb we see  the clock running 18 pulses, for each of the instructions in instructions.mem. 
+Please note that we have imported all these modules in mips core, and initialised an instance of the mips core in mips_tb.v. Here in mips_tb we see  the clock running 18 toggles, for each of the instructions in instructions.mem. 
 We have to hardcode something, so we hardcoded the instructions it can take.
 
 Now, see all the parts coming together. We have the PC variable initialised, all the temp variables to store the parts of instructions, the signals being initialised, and registers being loaded. 
 
 After instantiating all the modules, we start modifying the PC. We have jump functionality, we have jump to register contents, branching, and normal PC updating. Each part works as it is supposed to, because each module has been independently tested.
+
+The instructions being executed are:
+
+add $3, $1, $2
+addi $5, $4, 136
+
+repeated 9 times.
+We couldn't print the end result, but observing on 

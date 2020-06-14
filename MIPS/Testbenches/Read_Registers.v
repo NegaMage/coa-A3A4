@@ -24,17 +24,17 @@ module read_registers(
             /* RegWrite = 0 => Write to RT
                RegWrite = 1 => Write to RD
             */
-            read_data_1 = 32'dx;
-            read_data_2 = 32'dx;
+            read_data_1 = 32'd0;
+            read_data_2 = 32'd0;
             if(RegDst) begin
                 // LBU (Load byte unsigned)
                 if(opcode == 6'h24)
                 begin
-                    registers[rd] = {{24{1'b0}}, write_data[7:0]};
+                    registers[rd] <= {{24{1'b0}}, write_data[7:0]};
                 end
                 // LHU (Load halfword unsigned)
                 if(opcode == 6'h25)begin
-                    registers[rd] = {{16{1'b0}}, write_data[15:0]};
+                    registers[rd] <= {{16{1'b0}}, write_data[15:0]};
                 end
                 // else begin   // LL(Load linked)
                 //     registers[rd] = write_data;
@@ -44,19 +44,19 @@ module read_registers(
                 // LBU(load byte unsigned)
                 if(opcode == 6'h24)
                 begin        
-                    registers[rt] = {{24{1'b0}}, write_data[7:0]};
+                    registers[rt] <= {{24{1'b0}}, write_data[7:0]};
                 end
                 // LHU (Load halfword unsigned)
                 if(opcode == 6'h25)
                 begin        
-                    registers[rt] = {{16{1'b0}}, write_data[15:0]};
+                    registers[rt] <= {{16{1'b0}}, write_data[15:0]};
                 end
                 // else begin
                 //     registers[rt] = write_data;
                 // end
             end
             // Write back the updated values to the registers file
-            registers[5'd0]=32'd0;
+            registers[0]=32'd0;
             $writememb("registers.mem",registers);
         end
     end
@@ -64,10 +64,10 @@ module read_registers(
     always @(rs, rt) 
     begin
         // Read from registers
-        if(RegRead) begin
+        // if(RegRead) begin
             read_data_1 = registers[rs];
             read_data_2 = registers[rt];
-        end
+        // end
     end
 
     initial begin

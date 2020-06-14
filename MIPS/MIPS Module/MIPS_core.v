@@ -9,12 +9,12 @@
 `include "Ins_parse.v"
 
 
-module mips_core(clock);
+module MIPS_core(clock);
 
     input clock;   // Execution happens only at positive level-transition (edge sensitive)
 	
     // Program counter
-    reg[31:0] PC = 32'b0;
+    reg[31:0] PC = 32'b0; 
 	
     // Instruction
     wire [31:0] instruction;
@@ -28,27 +28,25 @@ module mips_core(clock);
 	
     // Signals
     wire RegRead, RegWrite, RegDst;  
-    wire MemRead, MemWrite;
+    wire MemRead, MemWrite, MemToReg;
     wire branch_signal;
+    wire PCSrc, ALUSrc;
 	
     // Registers contents
     wire [31:0] write_data, rs_content, rt_content, memory_read_data;
-	
 	
     // Instantiating all necessary modules
     read_instructions inst_mem (instruction, PC);
 	
     ins_parser parse (opcode, rs, rt, rd, shamt, funct, immediate, address, instruction, PC);
 	
-    control_unit signals (RegRead, RegWrite,MemRead, MemWrite, RegDst, 
-                                branch_signal, opcode, funct);
+    control_unit signals (RegRead, RegWrite, MemRead, MemWrite, RegDst, ALUSrc, PCSrc, MemToReg, branch_signal, opcode, funct);
 								 
-    ALU32bit alu_process (write_data, branch_signal, opcode, rs_content, rt_content, shamt, funct, immediate);
+    ALU32bit alu_process (write_data, branch_signal, ALUSrc, opcode, rs, rt, rs_content, rt_content, shamt, funct, immediate);
 	
-    read_data_memory dataMemory (memory_read_data, write_data, rt_content, opcode, MemRead, MemWrite);
+    read_data_memory dataMemory (memory_read_data, write_data, rt_content, opcode, rs, MemRead, MemWrite, MemToReg);
 	
-    read_registers contents (rs_content, rt_content, write_data, rs, rt, rd, opcode, 
-                                    RegRead, RegWrite, RegDst, clock);
+    read_registers contents (rs_content, rt_content, write_data, rs, rt, rd, opcode, RegRead, RegWrite, RegDst, clock);
 	
     // PC operations - The next instruction is read only when the clock is at positive edge
     always @(posedge clock) begin 
@@ -65,12 +63,7 @@ module mips_core(clock);
             PC = PC + 1 + $signed(immediate); 
         end
         else begin
-            PC = PC+1;
+            PC = PC + 1;
         end
     end 
-
-    initial begin
-        $dumpfile("MIPS_Core.vcd"); 
-        $dumpvars(0, mips_core);
-    end
 endmodule
