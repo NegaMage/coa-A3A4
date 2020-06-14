@@ -6,6 +6,7 @@ https://drive.google.com/drive/folders/1x6ZXkRyPD3YazumilLAJqLHjfP6HGpEI?usp=sha
 
 The code is on github, at:
 https://github.com/NegaMage/coa-A3A4
+https://github.com/NegaMage/upower
 
 These video demonstrations are submitted as part of course requirements for CS250, by students of BTech CSE-2022.
 
@@ -14,7 +15,7 @@ Submitted by:
 Feyaz Baker        :181CO119
 Shrvan Warke       :181CO151
 Nihar KG Rai       :181CO235
-Vignesh Srinivasan :181CO158
+Vignesh Srinivasan :181CO258
 
 In this folder, please find:
 
