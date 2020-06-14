@@ -1,5 +1,5 @@
-/* Module to behave like the control unit to set the necessary signals for the execution of an 
-   instruction -
+/* 
+Module to behave like the control unit to set the necessary signals for the execution of an instruction
    1. RegDst - Which field of the instruction is the register to be written to
    2. RegWrite - Write to register file
    3. RegRead - Read from a register
@@ -11,7 +11,7 @@
    9. Branch -  When a branch/jump instruction is used
 */
 
-module control_unit(
+module signal_gen(
     output reg  RegRead,
                 RegWrite,
                 MemRead,

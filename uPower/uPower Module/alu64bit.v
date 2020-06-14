@@ -1,11 +1,11 @@
-/* Module designed to act as the ALU - takes in the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals
-   with the signedImm as arguments
+/* 
+ALU Module - takes the opcode, contents of the registers, all the other flags, and returns ALUResult  and ALUSrc and branch signals.
 */
 
-module ALU64bit(
+module al_unit(
     output reg [63:0] ALU_result,
     output reg Branch, ALUSrc,
-    input [63:0] rs_content, rt_content,
+    input [63:0] rs_value, rt_value,
     input [5:0] opcode,
     input [4:0] rs, rt, rd, bo, bi,
     input [15:0] si,
@@ -19,11 +19,11 @@ module ALU64bit(
     reg signed [63:0] temp, signed_rt, signed_rs;
     reg [63:0] zeroExtendSI, signExtendSI, zeroExtendDS;
 
-    always @(rs_content, rt_content, si, xoxo, xox, xods, bo, bi, aa, ds, rs, rt)
+    always @(rs_value, rt_value, si, xoxo, xox, xods, bo, bi, aa, ds, rs, rt)
     begin
 
-      signed_rs = rs_content;
-      signed_rt = rt_content;
+      signed_rs = rs_value;
+      signed_rt = rt_value;
       zeroExtendSI = {{48{1'b0}}, si[15:0]};
       signExtendSI = {{48{si[15]}},si[15:0]};
       zeroExtendDS = {{50{1'b0}},ds[13:0]};
@@ -129,7 +129,7 @@ module ALU64bit(
     always @(rs, rt, bo, bi, si, xoxo, xox, xods)
     begin
         $monitor("Opcode : %6b\n, rs : %5b, rt : %5b, rd : %5b, \nRS : %64b\n, RT : %64b\n, signExtendSI = %64b\n, zeroExtendSI = %64b\n, zeroExtendDS = %64b\n, Result : %64b\n",
-        opcode, rs, rt, rd, rs_content, rt_content, signExtendSI, zeroExtendSI, zeroExtendDS, ALU_result);
+        opcode, rs, rt, rd, rs_value, rt_value, signExtendSI, zeroExtendSI, zeroExtendDS, ALU_result);
     end
 	
 endmodule

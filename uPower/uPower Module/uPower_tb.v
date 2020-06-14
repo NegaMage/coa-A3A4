@@ -1,5 +1,5 @@
 
-`include "uPowerISA_Core.v"
+`include "uPower_main.v"
 
 // uPowerISA test bench - To drive and simulate the entire MIPS ALU 
 module uPower_testbench();

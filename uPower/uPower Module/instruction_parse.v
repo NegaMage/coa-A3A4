@@ -1,8 +1,8 @@
-/* Module designed to read the instruction and assign the various
-   components of the instruction to suitable variables depending on the format
+/* 
+Module to take in a 32 bit wide mips instruction and split into relevant fields for sending to other modules.
 */
 
-module ins_parse(
+module instruction_parser(
     output wire [5:0] opcode, 
     output reg [4:0] rs, rt, rd, bo, bi, 
     output reg aa, lk, rc, oe,

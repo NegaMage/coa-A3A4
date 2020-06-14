@@ -1,6 +1,8 @@
-/* Module to read the 64-bit registers and read/write according to the RegWrite and RegRead signals*/
+/* 
+Module to simulate 32 64-bit registers, stored physically in registers.mem
+*/
 
-module read_registers(
+module register_reader(
     output reg [63:0] read_data_1, read_data_2, read_data_3, // The output are two 64-bit binary numbers that contain the data stored in RS and RT
     input [63:0] write_data, 
     input [4:0] rs, rt, rd, bo, bi, // RS and RT are the read registers and RD (Destination register) is the write register

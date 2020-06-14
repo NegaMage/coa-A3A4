@@ -1,12 +1,12 @@
 /* uPowerISA Core Module is the centre of all operations that handles all the operations and instantiates
 all the necessary modules
 */
-`include "Control_Unit.v"
-`include "Instruction_parse.v"
-`include "ALU64Bit.v"
-`include "Read_Instructions.v"
-`include "Read_Memory.v"
-`include "Read_Registers.v"
+`include "control_unit.v"
+`include "instruction_parse.v"
+`include "alu64bit.v"
+`include "read_instructions.v"
+`include "read_memory.v"
+`include "read_registers.v"
 
 module uPower_core(clock);
 
@@ -38,17 +38,17 @@ wire RegRead, RegWrite, MemRead, MemWrite, Branch, MemToReg, ALUSrc, PCSrc;
 wire [63:0] write_data, rs_content, rt_content, rd_content, memory_read_data;
 
 //Instantiating all necessary modules
-read_instructions InstructionMemory(instruction, PC);
+instr_reader instr_mem(instruction, PC);
 
-ins_parse Parse(opcode, rs, rt, rd, bo, bi, aa, lk, rc, oe, xox, xoxo, si, bd, ds, xods, li, instruction, PC);
+instruction_parser splitter(opcode, rs, rt, rd, bo, bi, aa, lk, rc, oe, xox, xoxo, si, bd, ds, xods, li, instruction, PC);
 
-control_unit Signals(RegRead, RegWrite, MemRead, MemWrite, Branch, MemToReg, ALU_Src, PCSrc, opcode, xox, xoxo, xods);
+signal_gen control_signals(RegRead, RegWrite, MemRead, MemWrite, Branch, MemToReg, ALU_Src, PCSrc, opcode, xox, xoxo, xods);
 
-ALU64bit ALU(write_data, Branch, ALUSrc, rs_content, rt_content, opcode, rs, rt, rd, bo, bi, si, ds, xox, xoxo, aa, xods);
+al_unit ALU(write_data, Branch, ALUSrc, rs_content, rt_content, opcode, rs, rt, rd, bo, bi, si, ds, xox, xoxo, aa, xods);
 
-read_data_memory MainMemory(memory_read_data, write_data, rd_content, rd, opcode, MemWrite, MemRead, MemToReg);
+memory_reader dataMemory(memory_read_data, write_data, rd_content, rd, opcode, MemWrite, MemRead, MemToReg);
 
-read_registers Registers(rs_content, rt_content, rd_content, write_data, rs, rt, rd, bo, bi, opcode, RegRead, RegWrite, clock);
+register_reader registers(rs_content, rt_content, rd_content, write_data, rs, rt, rd, bo, bi, opcode, RegRead, RegWrite, clock);
 
 // PC operations - The next instruction is read only when the clock is at positive edge
 

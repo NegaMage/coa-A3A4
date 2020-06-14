@@ -1,4 +1,7 @@
-module read_data_memory (
+/* 
+Module for reading and writing to main memory, stored as data.mem
+*/
+module memory_reader (
     output reg [63:0] read_data,
     input [63:0] address, write_data,
     input [4:0] rd, 
