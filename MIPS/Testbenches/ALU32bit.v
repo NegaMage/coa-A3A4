@@ -3,19 +3,25 @@
 ALU Module - takes the opcode, contents of the registers, shiftAmount, ALUResult and AluSrc signals, with the signedImm as arguments
 */
 
-module ALU32bit(ALU_result, branch_sig, opcode, rs_value, rt_value, shamt, funct, imm);
+module ALU32bit(ALU_result, branch_sig, AluSrc, opcode, rs, rt, rs_value, rt_value, shamt, funct, imm);
 	
     input [5:0] funct, opcode;
     input [4:0] shamt; // shift amount
     input [15:0] imm;
     input [31:0] rs_value, rt_value; //inputs
-    output reg branch_sig;
+    input [4:0] rs, rt;
+    output reg branch_sig, AluSrc;
     output reg [31:0] ALU_result; //Output of the ALU
 	
     integer i; //Loop counter
-    // Temporary variable - temp for SRA - Shift Right Arithmetic
+    // Temporary variable - temp for SRA
     reg signed [31:0] temp, signed_rs, signed_rt; 
     reg [31:0] signExtend, zeroExtend;
+
+    // initial begin
+    //     rs_value = 32'b0;
+    //     rt_value = 32'b0;
+    // end
 
     always @ (funct, rs_value, rt_value, shamt, imm) begin
 		
@@ -24,15 +30,16 @@ module ALU32bit(ALU_result, branch_sig, opcode, rs_value, rt_value, shamt, funct
         signed_rs = rs_value;
         signed_rt = rt_value;
 			
-			
         // R-type instruction
         if(opcode == 6'h0) begin
 			
             case(funct)
 			
                 6'h20 : //ADD
+                    begin
                     ALU_result = signed_rs + signed_rt;
-				
+
+                    end
                 6'h21 : //ADDU - Add unsigned
                     ALU_result = rs_value + rt_value;
 					
@@ -88,8 +95,6 @@ module ALU32bit(ALU_result, branch_sig, opcode, rs_value, rt_value, shamt, funct
             endcase
 			
         end 
-		
-		
 		
         // I type
         else begin
@@ -165,7 +170,7 @@ module ALU32bit(ALU_result, branch_sig, opcode, rs_value, rt_value, shamt, funct
                 6'h24 : // LBU - Load 
                     ALU_result = signed_rs + signExtend;
                 6'h25 : // LHU - Load halfword unsigned
-                    ALU_result = signed_rs + signExtend;
+                    ALU_result = signed_rs + zeroExtend;
                 6'h30 : // LL - Load linked
                     ALU_result = signed_rs + signExtend;
 				
@@ -174,12 +179,10 @@ module ALU32bit(ALU_result, branch_sig, opcode, rs_value, rt_value, shamt, funct
         end
 		
     end
-	
-	
-    initial 
+
+    always @ (funct, rs, rt, shamt, imm) 
     begin
-        $monitor("Opcode : %6b, RS : %32b, RT : %32b, signExtendImm = %32b, Result : %32b\n",
-        opcode, rs_value, rt_value, signExtend, ALU_result);
+        $display("Opcode : %6b, RS : %32b, RT : %32b, signExtendImm = %32b, Result : %32b\n",opcode, rs_value, rt_value, signExtend, ALU_result);
     end
 	
 endmodule
@@ -189,7 +192,8 @@ module alu32bittb();
     reg [4:0] shamt; // shift amount
     reg [15:0] imm;
     reg [31:0] rs_value, rt_value; //inputs
-    wire branch_sig;
+    reg [4:0] rs, rt;
+    wire branch_sig, AluSrc;
     wire [31:0] ALU_result; //Output of the ALU
 
 
@@ -198,6 +202,8 @@ module alu32bittb();
              .opcode(opcode),
              .rs_value(rs_value),
              .rt_value(rt_value),
+             .rs(rs),
+             .rt(rt),
              .shamt(shamt),
              .funct(funct),
              .imm(imm));
